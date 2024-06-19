@@ -28,11 +28,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  if: github.event_name == 'workflow_dispatch'
 
   version_increment_is_bump:
     name: Check If Version Increment Is Bump
     runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
     outputs:
       isBump: ${{ steps.check_if_increment_is_bump.outputs.value }}
     steps:
@@ -52,6 +52,7 @@ jobs:
   current_version:
     name: Store Current Version
     runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
     outputs:
       version: ${{ steps.version.outputs.version }}
     steps:
