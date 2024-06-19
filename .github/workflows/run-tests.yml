@@ -32,5 +32,6 @@ jobs:
         uses: codecov/codecov-action@v4
         with:
           fail_ci_if_error: true
+          files: /Users/runner/work/localization-services-ios/localization-services-ios/.build/arm64-apple-macosx/debug/codecov/LocalizationServices.json
           token: ${{ secrets.CODECOV_TOKEN }}
           verbose: true
