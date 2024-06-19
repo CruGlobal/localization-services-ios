@@ -12,13 +12,7 @@ import XCTest
 class LocalizableStringsRepositoryTests: XCTestCase {
  
     private let stringsRepository: LocalizableStringsRepository = LocalizableStringsRepository(
-        localizableStringsBundleLoader: LocalizableStringsBundleLoader(localizableStringsFilesBundle: Bundle.getTestBundle()),
-        fileType: .strings
-    )
-    
-    private let stringsdictRepository: LocalizableStringsRepository = LocalizableStringsRepository(
-        localizableStringsBundleLoader: LocalizableStringsBundleLoader(localizableStringsFilesBundle: Bundle.getTestBundle()),
-        fileType: .stringsdict
+        localizableStringsBundleLoader: LocalizableStringsBundleLoader(localizableStringsFilesBundle: Bundle.getTestBundle())
     )
     
     override func setUp() {
@@ -43,7 +37,7 @@ class LocalizableStringsRepositoryTests: XCTestCase {
     
     func testStringInEnglishLocalizableStringsdictExists() {
                 
-        let localizedString: String? = stringsdictRepository.stringForEnglish(
+        let localizedString: String? = stringsRepository.stringForEnglish(
             key: LocalizableStringsdictKeys.badgesToolsOpened.key
         )
         

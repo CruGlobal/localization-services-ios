@@ -10,8 +10,8 @@ import Foundation
 
 public protocol LocalizationServicesInterface {
  
-    func stringForEnglish(key: String, fileType: LocalizableStringsFileType) -> String
-    func stringForSystemElseEnglish(key: String, fileType: LocalizableStringsFileType) -> String
-    func stringForLocaleElseEnglish(localeIdentifier: String?, key: String, fileType: LocalizableStringsFileType) -> String
-    func stringForLocaleElseSystemElseEnglish(localeIdentifier: String?, key: String, fileType: LocalizableStringsFileType) -> String
+    func stringForEnglish(key: String) -> String
+    func stringForSystemElseEnglish(key: String) -> String
+    func stringForLocaleElseEnglish(localeIdentifier: String?, key: String) -> String
+    func stringForLocaleElseSystemElseEnglish(localeIdentifier: String?, key: String) -> String
 }

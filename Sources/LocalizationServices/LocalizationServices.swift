@@ -10,37 +10,35 @@ import Foundation
 
 public class LocalizationServices: LocalizationServicesInterface {
         
-    private let stringsRepositories: [LocalizableStringsFileType: LocalizableStringsRepository]
+    private let stringsRepository: LocalizableStringsRepository
     
     public let bundleLoader: LocalizableStringsBundleLoader
     
     public init(localizableStringsFilesBundle: Bundle?) {
         
-        self.bundleLoader = LocalizableStringsBundleLoader(localizableStringsFilesBundle: localizableStringsFilesBundle)
+        let bundleLoader = LocalizableStringsBundleLoader(localizableStringsFilesBundle: localizableStringsFilesBundle)
         
-        stringsRepositories = [
-            .strings: LocalizableStringsRepository(localizableStringsBundleLoader: bundleLoader, fileType: .strings),
-            .stringsdict: LocalizableStringsRepository(localizableStringsBundleLoader: bundleLoader, fileType: .stringsdict)
-        ]
+        self.stringsRepository = LocalizableStringsRepository(localizableStringsBundleLoader: bundleLoader)
+        self.bundleLoader = bundleLoader
     }
     
-    public func stringForEnglish(key: String, fileType: LocalizableStringsFileType = .strings) -> String {
+    public func stringForEnglish(key: String) -> String {
         
-        return stringsRepositories[fileType]?.stringForEnglish(key: key) ?? key
+        return stringsRepository.stringForEnglish(key: key) ?? key
     }
     
-    public func stringForSystemElseEnglish(key: String, fileType: LocalizableStringsFileType = .strings) -> String {
+    public func stringForSystemElseEnglish(key: String) -> String {
         
-        return stringsRepositories[fileType]?.stringForSystemElseEnglish(key: key) ?? key
+        return stringsRepository.stringForSystemElseEnglish(key: key) ?? key
     }
     
-    public func stringForLocaleElseEnglish(localeIdentifier: String?, key: String, fileType: LocalizableStringsFileType = .strings) -> String {
+    public func stringForLocaleElseEnglish(localeIdentifier: String?, key: String) -> String {
 
-        return stringsRepositories[fileType]?.stringForLocaleElseEnglish(localeIdentifier: localeIdentifier, key: key) ?? key
+        return stringsRepository.stringForLocaleElseEnglish(localeIdentifier: localeIdentifier, key: key) ?? key
     }
     
-    public func stringForLocaleElseSystemElseEnglish(localeIdentifier: String?, key: String, fileType: LocalizableStringsFileType = .strings) -> String {
+    public func stringForLocaleElseSystemElseEnglish(localeIdentifier: String?, key: String) -> String {
         
-        return stringsRepositories[fileType]?.stringForLocaleElseSystemElseEnglish(localeIdentifier: localeIdentifier, key: key) ?? key
+        return stringsRepository.stringForLocaleElseSystemElseEnglish(localeIdentifier: localeIdentifier, key: key) ?? key
     }
 }
