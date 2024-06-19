@@ -31,6 +31,7 @@ jobs:
       - name: Upload Xcode Code Coverage Report to CodeCov
         uses: codecov/codecov-action@v4
         with:
+          fail_ci_if_error: true
+          files: /Users/runner/work/localization-services-ios/localization-services-ios/.build/arm64-apple-macosx/debug/codecov/LocalizationServices.json
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: /Users/runner/work/localization-services-ios/localization-services-ios/.build/arm64-apple-macosx/debug/codecov/LocalizationServices.json
-          fail_ci_if_error: false
+          verbose: true
