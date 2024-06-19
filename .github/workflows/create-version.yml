@@ -172,5 +172,6 @@ jobs:
         uses: peter-evans/create-pull-request@v6
         with:
           branch: "bump-version-to-${{ needs.new_version.outputs.version }}"
+          token: ${{ secrets.CREATE_PULL_REQUEST_ACCESS_TOKEN }}
           title: "Bump version"
           commit-message: "Bump version to ${{needs.new_version.outputs.version}}"
