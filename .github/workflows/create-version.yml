@@ -2,9 +2,9 @@ name: Create Version
 
 on:
   push:
-    branches: [ ]
+    branches: [ main ]
   pull_request:
-    branches: [ ]
+    branches: [ main ]
     
   workflow_dispatch:
     inputs:
@@ -171,6 +171,6 @@ jobs:
       - name: Create Version Bump Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
-          branch: "versionBump/${{ needs.new_version.outputs.version }}"
-          title: "Bump version after release"
+          branch: "bump-version-to-${{ needs.new_version.outputs.version }}"
+          title: "Bump version"
           commit-message: "Bump version to ${{needs.new_version.outputs.version}}"
