@@ -15,7 +15,7 @@ public class LocalizableStringsBundleLoader {
     public static let englishLocalizableStringsFile: String = "Base"
     
     // NOTE: Stringsdict still uses deprecated English.lproj. ~Levi
-    public static let englishLocalizableStringsdictFile: String = "English"
+    public static let englishLocalizableStringsdictFile: String = "Base"
     
     public let localizableStringsFilesBundle: Bundle
     
@@ -24,16 +24,16 @@ public class LocalizableStringsBundleLoader {
         self.localizableStringsFilesBundle = localizableStringsFilesBundle ?? Bundle.main
     }
     
-    public func getEnglishBundle(fileType: LocalizableStringsFileType) -> LocalizableStringsBundle? {
+    public func getEnglishBundle() -> LocalizableStringsBundle? {
         
-        guard let englishBundle = bundleForResource(resourceName: "en", fileType: fileType) else {
+        guard let englishBundle = bundleForResource(resourceName: "en") else {
             return nil
         }
         
         return englishBundle
     }
     
-    public func bundleForResource(resourceName: String, fileType: LocalizableStringsFileType) -> LocalizableStringsBundle? {
+    public func bundleForResource(resourceName: String) -> LocalizableStringsBundle? {
                 
         guard !resourceName.isEmpty else {
             return nil
@@ -42,25 +42,36 @@ public class LocalizableStringsBundleLoader {
         let possibleEnglishLocalizableStringsFiles: [String] = ["en", "english", "base"]
         let isEnglishResource: Bool = possibleEnglishLocalizableStringsFiles.contains(resourceName.lowercased())
             
-        let localizationFilePath: String
+        let bundle: Bundle?
         
         if isEnglishResource {
            
-            switch fileType {
-           
-            case .strings:
-                localizationFilePath = LocalizableStringsBundleLoader.englishLocalizableStringsFile
-                
-            case .stringsdict:
-                localizationFilePath = LocalizableStringsBundleLoader.englishLocalizableStringsdictFile
+            if let baseBundle = getBundle(bundleFilename: "Base") {
+                bundle = baseBundle
+            }
+            else if let englishBundle = getBundle(bundleFilename: "English") {
+                bundle = englishBundle
+            }
+            else {
+                bundle = nil
             }
         }
         else {
-            
-            localizationFilePath = resourceName
+            bundle = getBundle(bundleFilename: resourceName)
         }
           
-        guard let bundlePath = localizableStringsFilesBundle.path(forResource: localizationFilePath, ofType: "lproj") else {
+        guard let bundle = bundle else {
+            return nil
+        }
+        
+        let localizableStringsBundle = LocalizableStringsBundle(bundle: bundle)
+        
+        return localizableStringsBundle
+    }
+    
+    private func getBundle(bundleFilename: String) -> Bundle? {
+        
+        guard let bundlePath = localizableStringsFilesBundle.path(forResource: bundleFilename, ofType: "lproj") else {
             return nil
         }
         
@@ -68,8 +79,6 @@ public class LocalizableStringsBundleLoader {
             return nil
         }
         
-        let localizableStringsBundle = LocalizableStringsBundle(bundle: bundle)
-        
-        return localizableStringsBundle
+        return bundle
     }
 }

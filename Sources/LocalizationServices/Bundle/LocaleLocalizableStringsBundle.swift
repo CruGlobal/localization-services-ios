@@ -14,13 +14,13 @@ public class LocaleLocalizableStringsBundle: LocalizableStringsBundle {
     public let locale: Locale
     public let localeIdentifier: String
     
-    public init?(localeIdentifier: String, localeBundleLoader: LocalizableStringsBundleLoader, fileType: LocalizableStringsFileType) {
+    public init?(localeIdentifier: String, localeBundleLoader: LocalizableStringsBundleLoader) {
         
         self.localeBundleLoader = localeBundleLoader
         self.locale = Locale(identifier: localeIdentifier)
         self.localeIdentifier = localeIdentifier
                 
-        if let localeBundle = localeBundleLoader.bundleForResource(resourceName: localeIdentifier, fileType: fileType) {
+        if let localeBundle = localeBundleLoader.bundleForResource(resourceName: localeIdentifier) {
             super.init(bundle: localeBundle.bundle)
         }
         else {

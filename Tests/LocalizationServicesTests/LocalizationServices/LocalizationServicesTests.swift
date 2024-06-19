@@ -24,8 +24,7 @@ class LocalizationServicesTests: XCTestCase {
     func testStringInEnglishLocalizableStringsExists() {
                 
         let localizedString: String? = localizationServices.stringForEnglish(
-            key: LocalizableStringsKeys.testValueYes.key,
-            fileType: .strings
+            key: LocalizableStringsKeys.testValueYes.key
         )
         
         XCTAssertNotNil(localizedString)
@@ -35,8 +34,7 @@ class LocalizationServicesTests: XCTestCase {
     func testStringInEnglishLocalizableStringsdictExists() {
                 
         let localizedString: String? = localizationServices.stringForEnglish(
-            key: LocalizableStringsdictKeys.badgesToolsOpened.key,
-            fileType: .stringsdict
+            key: LocalizableStringsdictKeys.badgesToolsOpened.key
         )
         
         XCTAssertNotNil(localizedString)
@@ -45,7 +43,7 @@ class LocalizationServicesTests: XCTestCase {
     func testMissingStringInEnglishLocalizableStringsdictReturnsKeyValue() {
                 
         let missingPhraseKey: String = LocalizableStringsBundleTests.missingStringPhraseKey
-        let localizedString: String = localizationServices.stringForEnglish(key: missingPhraseKey, fileType: .stringsdict)
+        let localizedString: String = localizationServices.stringForEnglish(key: missingPhraseKey)
         
         XCTAssertEqual(localizedString, missingPhraseKey)
     }

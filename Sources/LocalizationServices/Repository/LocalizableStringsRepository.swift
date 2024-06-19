@@ -15,12 +15,10 @@ public class LocalizableStringsRepository {
     private var lastLoadedLocaleLocalizableStringsBundle: LocaleLocalizableStringsBundle?
     
     public let localizableStringsBundleLoader: LocalizableStringsBundleLoader
-    public let fileType: LocalizableStringsFileType
     
-    public init(localizableStringsBundleLoader: LocalizableStringsBundleLoader, fileType: LocalizableStringsFileType) {
+    public init(localizableStringsBundleLoader: LocalizableStringsBundleLoader) {
         
         self.localizableStringsBundleLoader = localizableStringsBundleLoader
-        self.fileType = fileType
     }
     
     public func stringForEnglish(key: String) -> String? {
@@ -99,7 +97,7 @@ extension LocalizableStringsRepository {
             
             return lastLoadedEnglishLocalizableStringsBundle
         }
-        else if let englishBundle = localizableStringsBundleLoader.getEnglishBundle(fileType: fileType) {
+        else if let englishBundle = localizableStringsBundleLoader.getEnglishBundle() {
            
             lastLoadedEnglishLocalizableStringsBundle = englishBundle
             
@@ -121,13 +119,13 @@ extension LocalizableStringsRepository {
         
         if lastLoadedSystemLocalizableStringsBundle == nil || systemLocaleChanged {
             
-            if let newSystemLocalizableStrings = LocaleLocalizableStringsBundle(localeIdentifier: systemLocaleIdentifier, localeBundleLoader: localizableStringsBundleLoader, fileType: fileType) {
+            if let newSystemLocalizableStrings = LocaleLocalizableStringsBundle(localeIdentifier: systemLocaleIdentifier, localeBundleLoader: localizableStringsBundleLoader) {
                 
                 lastLoadedSystemLocalizableStringsBundle = newSystemLocalizableStrings
             }
             else if let currentSystemLocalizableStrings = self.lastLoadedSystemLocalizableStringsBundle, currentSystemLocalizableStrings.localeIdentifier != "en" {
                 
-                lastLoadedSystemLocalizableStringsBundle = LocaleLocalizableStringsBundle(localeIdentifier: "en", localeBundleLoader: localizableStringsBundleLoader, fileType: fileType)
+                lastLoadedSystemLocalizableStringsBundle = LocaleLocalizableStringsBundle(localeIdentifier: "en", localeBundleLoader: localizableStringsBundleLoader)
             }
         }
         
@@ -162,8 +160,7 @@ extension LocalizableStringsRepository {
             
             lastLoadedLocaleLocalizableStringsBundle = LocaleLocalizableStringsBundle(
                 localeIdentifier: localeIdentifier,
-                localeBundleLoader: localizableStringsBundleLoader,
-                fileType: fileType
+                localeBundleLoader: localizableStringsBundleLoader
             )
                         
             return lastLoadedLocaleLocalizableStringsBundle
