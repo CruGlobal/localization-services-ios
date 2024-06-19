@@ -33,7 +33,7 @@ jobs:
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./.build/debug/codecov/MyAwesomeLibrary.json
+          file: ./.build/debug/codecov/LocalizationServices.json
           flags: unittests
           name: codecov-umbrella
           fail_ci_if_error: false
