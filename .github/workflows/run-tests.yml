@@ -33,6 +33,4 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: /Users/runner/work/localization-services-ios/localization-services-ios/.build/arm64-apple-macosx/debug/codecov/LocalizationServices.json
-          flags: unittests
-          name: codecov-umbrella
           fail_ci_if_error: false
