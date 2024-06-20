@@ -17,14 +17,17 @@ concurrency:
 jobs:
   run_tests_and_code_coverage:
     name: Run Tests and Code Coverage
-    runs-on: macos-14
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Select Xcode Version
-        uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: '15.4.0'
+      # - name: Select Xcode Version
+      #   uses: maxim-lobanov/setup-xcode@v1
+      #   with:
+      #     xcode-version: '15.4.0'
+      - name: Build Swift
+        run: |
+          swift build
       - name: Run Tests
         run: |
           swift test --enable-code-coverage
@@ -32,8 +35,14 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: |
-          xcrun llvm-cov export -format="lcov" .build/debug/LocalizationServicesPackageTests.xctest/Contents/MacOS/LocalizationServicesPackageTests -instr-profile .build/debug/codecov/default.profdata > info.lcov
+          xcrun llvm-cov export -format="lcov" .build/debug/LocalizationServicesPackageTests.xctest -instr-profile .build/debug/codecov/default.profdata > info.lcov
           bash <(curl https://codecov.io/bash) -t $CODECOV_TOKEN
+      # - name: Upload Code Coverage
+      #   env:
+      #     CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      #   run: |
+      #     xcrun llvm-cov export -format="lcov" .build/debug/LocalizationServicesPackageTests.xctest/Contents/MacOS/LocalizationServicesPackageTests -instr-profile .build/debug/codecov/default.profdata > info.lcov
+      #     bash <(curl https://codecov.io/bash) -t $CODECOV_TOKEN
       # - name: Run Tests
       #   run: |
       #     swift test --enable-code-coverage
