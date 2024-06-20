@@ -35,35 +35,19 @@ jobs:
         run: |
           xcrun llvm-cov export -format="lcov" .build/arm64-apple-macosx/debug/LocalizationServicesPackageTests.xctest/Contents/MacOS/LocalizationServicesPackageTests -instr-profile .build/arm64-apple-macosx/debug/codecov/default.profdata > info.lcov
       - name: Upload Code Coverage Report to CodeCov
-        uses: codecov/codecov-action@v4
-        with:
-          fail_ci_if_error: true
-          files: info.lcov
-          token: ${{ secrets.CODECOV_TOKEN }}
-          verbose: true
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        run: |
+          bash <(curl https://codecov.io/bash) -t $CODECOV_TOKEN
+      # - name: Upload Code Coverage Report to CodeCov
+      #   uses: codecov/codecov-action@v4
+      #   with:
+      #     fail_ci_if_error: true
+      #     files: info.lcov
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     verbose: true
 
-      # - name: Run Tests and Upload Code Coverage
-      #   env:
-      #     CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      #   run: |
-      #     swift build
-      #     swift test --enable-code-coverage
-      #     llvm-cov export -format="lcov" .build/debug/LocalizationServicesPackageTests.xctest -instr-profile .build/debug/codecov/default.profdata > info.lcov
-      #     bash <(curl https://codecov.io/bash) -t $CODECOV_TOKEN
-
-
-
-      # - name: Upload Code Coverage
-      #   env:
-      #     CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      #   run: |
-      #     xcrun llvm-cov export -format="lcov" .build/debug/LocalizationServicesPackageTests.xctest/Contents/MacOS/LocalizationServicesPackageTests -instr-profile .build/debug/codecov/default.profdata > info.lcov
-      #     bash <(curl https://codecov.io/bash) -t $CODECOV_TOKEN
-
-
-
-
-
+      
 # swift build
 # swift test --enable-code-coverage
 # llvm-cov export -format="lcov" .build/debug/SwiftLoggerPackageTests.xctest -instr-profile .build/debug/codecov/default.profdata > info.lcov
