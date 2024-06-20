@@ -32,7 +32,7 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: |
-          xcrun llvm-cov export -format="lcov" .build/debug/LocalizationServicesPackageTests.xctest -instr-profile .build/debug/codecov/default.profdata > info.lcov
+          xcrun llvm-cov export -format="lcov" .build/debug/LocalizationServicesPackageTests.xctest/Contents/MacOS/LocalizationServicesPackageTests -instr-profile .build/debug/codecov/default.profdata > info.lcov
           bash <(curl https://codecov.io/bash) -t $CODECOV_TOKEN
       # - name: Run Tests
       #   run: |
