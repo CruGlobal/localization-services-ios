@@ -23,10 +23,6 @@ on:
         required: false
         type: string
 
-permissions:
-  id-token: write
-  contents: read
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -172,10 +168,11 @@ jobs:
       - name: Bump Podspec Version
         run: |
           sed -i "s/s.version = '${{ needs.current_version.outputs.version }}'/s.version = '${{ needs.new_version.outputs.version }}'/g" LocalizationServices.podspec
+      - name: Push Commits To Remote
+        run: git push
       - name: Create Version Bump Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
           branch: "bump-version-to-${{ needs.new_version.outputs.version }}"
-          token: ${{ secrets.CREATE_PULL_REQUEST_ACCESS_TOKEN }}
           title: "Bump version"
           commit-message: "Bump version to ${{needs.new_version.outputs.version}}"
