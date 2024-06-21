@@ -27,20 +27,12 @@ jobs:
         uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: '15.4.0'
-      - name: Build Swift
-        run: |
-          swift build
       - name: Run Tests
         run: |
           swift test --enable-code-coverage
       - name: Convert To LLVM-COV
         run: |
           xcrun llvm-cov export -format="lcov" .build/arm64-apple-macosx/debug/LocalizationServicesPackageTests.xctest/Contents/MacOS/LocalizationServicesPackageTests -instr-profile .build/arm64-apple-macosx/debug/codecov/default.profdata > lcov.txt
-      # - name: Upload Code Coverage Report to CodeCov
-      #   env:
-      #     CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      #   run: |
-      #     bash <(curl https://codecov.io/bash) -t $CODECOV_TOKEN
       - name: Upload Code Coverage Report to CodeCov
         uses: codecov/codecov-action@v4
         with:
@@ -48,9 +40,3 @@ jobs:
           files: lcov.txt
           token: ${{ secrets.CODECOV_TOKEN }}
           verbose: true
-
-      
-# swift build
-# swift test --enable-code-coverage
-# llvm-cov export -format="lcov" .build/debug/SwiftLoggerPackageTests.xctest -instr-profile .build/debug/codecov/default.profdata > info.lcov
-# bash <(curl https://codecov.io/bash)
