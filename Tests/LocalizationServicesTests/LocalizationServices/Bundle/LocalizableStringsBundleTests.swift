@@ -25,7 +25,7 @@ class LocalizableStringsBundleTests: XCTestCase {
     
     func testEmptyKeyReturnsNil() {
         
-        XCTAssertNil(stringsBundle.stringForKey(key: LocalizableStringsBundleTests.missingStringPhraseKey), "")
+        XCTAssertNil(stringsBundle.stringForKey(key: ""), "Value returned should be nil.")
     }
     
     func testExistingPhraseReturnsAValue() {
