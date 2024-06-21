@@ -30,7 +30,7 @@ jobs:
       - name: Run Tests
         run: |
           swift test --enable-code-coverage
-      - name: Convert To LLVM-COV
+      - name: Convert To Lcov TXT
         run: |
           xcrun llvm-cov export -format="lcov" .build/arm64-apple-macosx/debug/LocalizationServicesPackageTests.xctest/Contents/MacOS/LocalizationServicesPackageTests -instr-profile .build/arm64-apple-macosx/debug/codecov/default.profdata > lcov.txt
       - name: Upload Code Coverage Report to CodeCov
