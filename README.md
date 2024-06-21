@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/CruGlobal/localization-services-ios/branch/main/graph/badge.svg)](https://codecov.io/gh/CruGlobal/localization-services-ios)
+
 # localization-services-ios
 Class for fetching localized strings based on a Locale from a Bundle's .strings and .stringsdict files
 
