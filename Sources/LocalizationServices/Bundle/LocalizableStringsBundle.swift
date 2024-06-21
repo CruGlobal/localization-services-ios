@@ -20,14 +20,14 @@ public class LocalizableStringsBundle {
     }
     
     public func stringForKey(key: String) -> String? {
-                
-        let localizedString: String = bundle.localizedString(forKey: key, value: LocalizableStringsBundle.uniqueValue, table: nil)
         
-        guard !localizedString.isEmpty else {
+        guard !key.isEmpty else {
             return nil
         }
         
-        guard localizedString != LocalizableStringsBundle.uniqueValue else {
+        let localizedString: String = bundle.localizedString(forKey: key, value: LocalizableStringsBundle.uniqueValue, table: nil)
+        
+        guard !localizedString.isEmpty && localizedString != LocalizableStringsBundle.uniqueValue else {
             return nil
         }
         
