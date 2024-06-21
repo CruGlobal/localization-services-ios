@@ -23,11 +23,11 @@ public class LocalizableStringsBundle {
                 
         let localizedString: String = bundle.localizedString(forKey: key, value: LocalizableStringsBundle.uniqueValue, table: nil)
         
-        guard localizedString != LocalizableStringsBundle.uniqueValue else {
+        guard !localizedString.isEmpty else {
             return nil
         }
         
-        guard !localizedString.isEmpty else {
+        guard localizedString != LocalizableStringsBundle.uniqueValue else {
             return nil
         }
         
