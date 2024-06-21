@@ -23,6 +23,11 @@ class LocalizableStringsBundleTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
     
+    func testEmptyKeyReturnsNil() {
+        
+        XCTAssertNil(stringsBundle.stringForKey(key: LocalizableStringsBundleTests.missingStringPhraseKey), "")
+    }
+    
     func testExistingPhraseReturnsAValue() {
         
         XCTAssertEqual(stringsBundle.stringForKey(key: LocalizableStringsKeys.testValueYes.key), "yes", "Value should equal yes.")
