@@ -56,4 +56,9 @@ class LocalizableStringsBundleLoaderTests: XCTestCase {
         
         XCTAssertNil(bundleLoader.bundleForResource(resourceName: LocalizableStringsBundleLoaderTests.missingLocalizableStringsResource))
     }
+    
+    func testEmptyResourceNameShouldReturnNil() {
+        
+        XCTAssertNil(bundleLoader.bundleForResource(resourceName: ""))
+    }
 }

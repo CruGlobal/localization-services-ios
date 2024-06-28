@@ -25,12 +25,7 @@ public class LocalizableStringsBundleLoader {
     }
     
     public func getEnglishBundle() -> LocalizableStringsBundle? {
-        
-        guard let englishBundle = bundleForResource(resourceName: "en") else {
-            return nil
-        }
-        
-        return englishBundle
+        return bundleForResource(resourceName: "en")
     }
     
     public func bundleForResource(resourceName: String) -> LocalizableStringsBundle? {
@@ -45,16 +40,7 @@ public class LocalizableStringsBundleLoader {
         let bundle: Bundle?
         
         if isEnglishResource {
-           
-            if let baseBundle = getBundle(bundleFilename: "Base") {
-                bundle = baseBundle
-            }
-            else if let englishBundle = getBundle(bundleFilename: "English") {
-                bundle = englishBundle
-            }
-            else {
-                bundle = nil
-            }
+            bundle = getBundle(bundleFilename: "Base") ?? getBundle(bundleFilename: "English")
         }
         else {
             bundle = getBundle(bundleFilename: resourceName)
@@ -75,10 +61,6 @@ public class LocalizableStringsBundleLoader {
             return nil
         }
         
-        guard let bundle = Bundle(path: bundlePath) else {
-            return nil
-        }
-        
-        return bundle
+        return Bundle(path: bundlePath)
     }
 }
