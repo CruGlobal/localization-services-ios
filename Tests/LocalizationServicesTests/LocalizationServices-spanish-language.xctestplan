@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "AC3E41B3-57AC-410E-B023-A247A5081F79",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "language" : "es"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "LocalizationServicesTests",
+        "name" : "LocalizationServicesTests"
+      }
+    }
+  ],
+  "version" : 1
+}
