@@ -30,7 +30,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:Tests/LocalizationServicesTests/Resources/LocalizationServices-system-is-spanish-language.xctestplan"
+            reference = "container:LocalizationServices-system-is-spanish-language.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
