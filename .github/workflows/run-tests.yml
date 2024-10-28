@@ -28,16 +28,24 @@ jobs:
           swift build
       - name: Run Tests
         run: xcodebuild test -scheme LocalizationServicesTests -sdk iphonesimulator18.0 -destination "OS=18.0,name=iPhone 16"
-      # - name: Run Tests
-      #   run: |
-      #     swift test --enable-code-coverage
-      - name: Convert To Lcov TXT
-        run: |
-          xcrun llvm-cov export -format="lcov" .build/arm64-apple-macosx/debug/LocalizationServicesPackageTests.xctest/Contents/MacOS/LocalizationServicesPackageTests -instr-profile .build/arm64-apple-macosx/debug/codecov/default.profdata > lcov.txt
-      - name: Upload Code Coverage Report to CodeCov
+      - name: Upload Xcode Code Coverage Report to CodeCov
         uses: codecov/codecov-action@v4
         with:
           fail_ci_if_error: true
-          files: lcov.txt
           token: ${{ secrets.CODECOV_TOKEN }}
           verbose: true
+          xcode: true
+
+      # - name: Run Tests
+      #   run: |
+      #     swift test --enable-code-coverage
+      # - name: Convert To Lcov TXT
+      #   run: |
+      #     xcrun llvm-cov export -format="lcov" .build/arm64-apple-macosx/debug/LocalizationServicesPackageTests.xctest/Contents/MacOS/LocalizationServicesPackageTests -instr-profile .build/arm64-apple-macosx/debug/codecov/default.profdata > lcov.txt
+      # - name: Upload Code Coverage Report to CodeCov
+      #   uses: codecov/codecov-action@v4
+      #   with:
+      #     fail_ci_if_error: true
+      #     files: lcov.txt
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     verbose: true
