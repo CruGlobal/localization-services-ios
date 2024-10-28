@@ -9,12 +9,7 @@
     }
   ],
   "defaultOptions" : {
-    "language" : "es",
-    "locationScenario" : {
-      "identifier" : "Mexico City, Mexico",
-      "referenceType" : "built-in"
-    },
-    "region" : "MX"
+    "language" : "es"
   },
   "testTargets" : [
     {
