@@ -57,6 +57,29 @@ class LocalizableStringsRepositoryTests: XCTestCase {
         XCTAssertEqual(localizedString, "Sí")
     }
     
+    func testStringForLocaleElseEnglishReturnsLocale() {
+        
+        XCTAssertTrue(stringsRepository.stringForLocaleElseEnglish(localeIdentifier: LocaleId.spanish.id, key: "test.value.yes") == "Sí")
+    }
+    
+    func testStringForLocaleElseSystemElseEnglishReturnsLocale() {
+        
+        XCTAssertTrue(stringsRepository.stringForLocaleElseSystemElseEnglish(localeIdentifier: LocaleId.spanish.id, key: "test.value.yes") == "Sí")
+    }
+    
+    func testStringForLocaleElseSystemElseEnglishReturnsEnglish() {
+        
+        let localizedString: String? = stringsRepository.stringForLocaleElseSystemElseEnglish(localeIdentifier: LocaleId.spanish.id, key: "test.value.englishOnly")
+        
+        XCTAssertTrue(localizedString == "English Only")
+    }
+    
+    func testStringForLocaleReturnsNil() {
+        
+        XCTAssertNil(stringsRepository.stringForLocale(localeIdentifier: nil, key: "test.value.yes"))
+        XCTAssertNil(stringsRepository.stringForLocale(localeIdentifier: "", key: "test.value.yes"))
+    }
+    
     func testStringForLocaleDoesNotExist() {
         
         let localizedString: String? = stringsRepository.stringForLocale(
@@ -86,5 +109,22 @@ class LocalizableStringsRepositoryTests: XCTestCase {
         )
         
         XCTAssertNotNil(localizedString)
+    }
+    
+    // MARK: - System
+    
+    func testStringForSystemReturnsSpanishTranslationWhenSystemIsSpanish() {
+        
+        // Expects System to be in Spanish.  Configured in tests.
+                
+        XCTAssertTrue(stringsRepository.stringForSystem(key: "test.value.yes") == "Sí")
+        XCTAssertTrue(stringsRepository.stringForSystemElseEnglish(key: "test.value.yes") == "Sí")
+    }
+    
+    func testStringForSystemReturnsEnglishTranslationWhenSystemTranslationDoesNotExist() {
+        
+        // Expects System to be in Spanish.  Configured in tests.
+                
+        XCTAssertTrue(stringsRepository.stringForSystemElseEnglish(key: "test.value.englishOnly") == "English Only")
     }
 }

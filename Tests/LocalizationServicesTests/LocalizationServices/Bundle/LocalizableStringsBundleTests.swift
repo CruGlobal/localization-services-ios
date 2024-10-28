@@ -25,16 +25,18 @@ class LocalizableStringsBundleTests: XCTestCase {
     
     func testEmptyKeyReturnsNil() {
         
-        XCTAssertNil(stringsBundle.stringForKey(key: ""), "Value returned should be nil.")
+        XCTAssertNil(stringsBundle.stringForKey(key: ""))
     }
     
     func testExistingPhraseReturnsAValue() {
         
-        XCTAssertEqual(stringsBundle.stringForKey(key: LocalizableStringsKeys.testValueYes.key), "yes", "Value should equal yes.")
+        // Expects System to be in Spanish.  Configured in tests.
+        
+        XCTAssertEqual(stringsBundle.stringForKey(key: LocalizableStringsKeys.testValueYes.key), "Sí")
     }
     
     func testMissingPhraseReturnsANilValue() {
         
-        XCTAssertNil(stringsBundle.stringForKey(key: LocalizableStringsBundleTests.missingStringPhraseKey), "Value returned should be nil.")
+        XCTAssertNil(stringsBundle.stringForKey(key: LocalizableStringsBundleTests.missingStringPhraseKey))
     }
 }
