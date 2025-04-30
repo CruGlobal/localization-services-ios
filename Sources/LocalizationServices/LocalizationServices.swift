@@ -10,8 +10,7 @@ import Foundation
 
 public class LocalizationServices: LocalizationServicesInterface {
         
-    private let stringsRepository: LocalizableStringsRepository
-    
+    public let stringsRepository: LocalizableStringsRepository
     public let bundleLoader: LocalizableStringsBundleLoader
     
     public init(localizableStringsFilesBundle: Bundle?) {
