@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
     s.name = 'LocalizationServices'
-    s.version = '0.2.1'
+    s.version = '0.2.2'
     s.summary = 'Module for fetching localized strings based on a Locale from a Bundles .strings and .stringsdict files.'
   
   
