@@ -10,13 +10,6 @@ import Foundation
 
 public class LocalizableStringsBundleLoader {
     
-    // NOTE: Will be Base if Use Base Internationalization is checked in Project > Info > Localizations Section.
-    //       English.lproj is deprecated for Localizable.strings. ~Levi
-    public static let englishLocalizableStringsFile: String = "Base"
-    
-    // NOTE: Stringsdict still uses deprecated English.lproj. ~Levi
-    public static let englishLocalizableStringsdictFile: String = "Base"
-    
     public let localizableStringsFilesBundle: Bundle
     
     public init(localizableStringsFilesBundle: Bundle?) {
@@ -40,7 +33,7 @@ public class LocalizableStringsBundleLoader {
         let bundle: Bundle?
         
         if isEnglishResource {
-            bundle = getBundle(bundleFilename: "Base") ?? getBundle(bundleFilename: "English")
+            bundle = getBundle(bundleFilename: "Base") ?? getBundle(bundleFilename: "en") ?? getBundle(bundleFilename: "English")
         }
         else {
             bundle = getBundle(bundleFilename: resourceName)
