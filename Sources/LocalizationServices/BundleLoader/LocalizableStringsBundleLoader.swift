@@ -33,7 +33,19 @@ public class LocalizableStringsBundleLoader {
         let bundle: Bundle?
         
         if isEnglishResource {
-            bundle = getBundle(bundleFilename: "Base") ?? getBundle(bundleFilename: "en") ?? getBundle(bundleFilename: "English")
+            
+            if let baseBundle = getBundle(bundleFilename: "Base") {
+                bundle = baseBundle
+            }
+            else if let enBundle = getBundle(bundleFilename: "en") {
+                bundle = enBundle
+            }
+            else if let englishBundle = getBundle(bundleFilename: "English") {
+                bundle = englishBundle
+            }
+            else {
+                bundle = nil
+            }
         }
         else {
             bundle = getBundle(bundleFilename: resourceName)
