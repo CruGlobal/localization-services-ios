@@ -11,7 +11,10 @@ import XCTest
 
 class LocalizationServicesTests: XCTestCase {
  
-    private let localizationServices: LocalizationServices = LocalizationServices(localizableStringsFilesBundle: Bundle.getTestBundle())
+    private let localizationServices: LocalizationServices = LocalizationServices(
+        localizableStringsFilesBundle: Bundle.getTestBundle(),
+        isUsingBaseInternationalization: true
+    )
     
     override func setUp() {
         // Put setup code here. This method is called before the invocation of each test method in the class.
