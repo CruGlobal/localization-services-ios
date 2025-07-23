@@ -13,9 +13,12 @@ public class LocalizationServices: LocalizationServicesInterface {
     public let stringsRepository: LocalizableStringsRepository
     public let bundleLoader: LocalizableStringsBundleLoader
     
-    public init(localizableStringsFilesBundle: Bundle?) {
+    public init(localizableStringsFilesBundle: Bundle?, isUsingBaseInternationalization: Bool) {
         
-        let bundleLoader = LocalizableStringsBundleLoader(localizableStringsFilesBundle: localizableStringsFilesBundle)
+        let bundleLoader = LocalizableStringsBundleLoader(
+            localizableStringsFilesBundle: localizableStringsFilesBundle,
+            isUsingBaseInternationalization: isUsingBaseInternationalization
+        )
         
         self.stringsRepository = LocalizableStringsRepository(localizableStringsBundleLoader: bundleLoader)
         self.bundleLoader = bundleLoader

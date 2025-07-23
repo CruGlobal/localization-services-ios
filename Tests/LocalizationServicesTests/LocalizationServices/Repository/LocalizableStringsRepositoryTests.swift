@@ -12,7 +12,10 @@ import XCTest
 class LocalizableStringsRepositoryTests: XCTestCase {
  
     private let stringsRepository: LocalizableStringsRepository = LocalizableStringsRepository(
-        localizableStringsBundleLoader: LocalizableStringsBundleLoader(localizableStringsFilesBundle: Bundle.getTestBundle())
+        localizableStringsBundleLoader: LocalizableStringsBundleLoader(
+            localizableStringsFilesBundle: Bundle.getTestBundle(),
+            isUsingBaseInternationalization: true
+        )
     )
     
     override func setUp() {
