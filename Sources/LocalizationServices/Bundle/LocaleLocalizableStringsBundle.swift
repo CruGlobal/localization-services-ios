@@ -20,7 +20,7 @@ public class LocaleLocalizableStringsBundle: LocalizableStringsBundle {
         self.locale = Locale(identifier: localeIdentifier)
         self.localeIdentifier = localeIdentifier
                 
-        if let localeBundle = localeBundleLoader.bundleForResource(resourceName: localeIdentifier) {
+        if let localeBundle = localeBundleLoader.bundleForResource(bundleFilename: localeIdentifier) {
             super.init(bundle: localeBundle.bundle)
         }
         else {

@@ -10,49 +10,84 @@ import Foundation
 
 public class LocalizableStringsBundleLoader {
     
-    // NOTE: Will be Base if Use Base Internationalization is checked in Project > Info > Localizations Section.
-    //       English.lproj is deprecated for Localizable.strings. ~Levi
-    public static let englishLocalizableStringsFile: String = "Base"
+    public static let possibleEnglishBundleFilenames: [String] = [
+        LocalizableStringsBundleLoader.enBundleFilename,
+        LocalizableStringsBundleLoader.englishBundleFilename
+    ]
     
-    // NOTE: Stringsdict still uses deprecated English.lproj. ~Levi
-    public static let englishLocalizableStringsdictFile: String = "Base"
+    public static let enBundleFilename: String = "en"
+    public static let englishBundleFilename: String = "English"
     
     public let localizableStringsFilesBundle: Bundle
+    public let baseInternationalization: BaseInternationalization?
     
-    public init(localizableStringsFilesBundle: Bundle?) {
+    public init(localizableStringsFilesBundle: Bundle?, isUsingBaseInternationalization: Bool, baseInternationalizationBaseLanguage: String? = nil) {
         
         self.localizableStringsFilesBundle = localizableStringsFilesBundle ?? Bundle.main
+        
+        if isUsingBaseInternationalization {
+            baseInternationalization = BaseInternationalization(
+                baseLanguage: baseInternationalizationBaseLanguage ?? Self.enBundleFilename
+            )
+        }
+        else {
+            baseInternationalization = nil
+        }
     }
     
     public func getEnglishBundle() -> LocalizableStringsBundle? {
-        return bundleForResource(resourceName: "en")
+        
+        var bundleFilenames: [String] = Self.possibleEnglishBundleFilenames
+        
+        if let baseInternationalization = self.baseInternationalization, baseInternationalization.isEnglish {
+            bundleFilenames.insert(BaseInternationalization.baseBundleFilename, at: 0)
+        }
+        
+        return getBundle(bundleFilenames: bundleFilenames)
     }
     
-    public func bundleForResource(resourceName: String) -> LocalizableStringsBundle? {
+    public func bundleForResource(bundleFilename: String) -> LocalizableStringsBundle? {
                 
-        guard !resourceName.isEmpty else {
+        guard !bundleFilename.isEmpty else {
             return nil
         }
         
-        let possibleEnglishLocalizableStringsFiles: [String] = ["en", "english", "base"]
-        let isEnglishResource: Bool = possibleEnglishLocalizableStringsFiles.contains(resourceName.lowercased())
-            
-        let bundle: Bundle?
+        let bundleFilenameIsBaseFilename: Bool = bundleFilename.lowercased() == BaseInternationalization.baseBundleFilename.lowercased()
+        let bundleFilenameIsEnglish: Bool = Self.possibleEnglishBundleFilenames.map{$0.lowercased()}.contains(bundleFilename.lowercased())
         
-        if isEnglishResource {
-            bundle = getBundle(bundleFilename: "Base") ?? getBundle(bundleFilename: "English")
+        if let baseInternationalization = self.baseInternationalization,
+           (bundleFilenameIsBaseFilename || baseInternationalization.baseLanguage == bundleFilename),
+           let baseBundle = getBundle(bundleFilename: BaseInternationalization.baseBundleFilename) {
+            
+            return LocalizableStringsBundle(bundle: baseBundle)
         }
-        else {
-            bundle = getBundle(bundleFilename: resourceName)
+        else if bundleFilenameIsEnglish {
+            
+            return getBundle(bundleFilenames: Self.possibleEnglishBundleFilenames)
         }
-          
-        guard let bundle = bundle else {
+        
+        if bundleFilenameIsBaseFilename && baseInternationalization == nil {
+            return nil
+        }
+
+        guard let bundle = getBundle(bundleFilename: bundleFilename) else {
             return nil
         }
         
         let localizableStringsBundle = LocalizableStringsBundle(bundle: bundle)
         
         return localizableStringsBundle
+    }
+    
+    private func getBundle(bundleFilenames: [String]) -> LocalizableStringsBundle? {
+        
+        for bundleFilename in bundleFilenames {
+            if let bundle = getBundle(bundleFilename: bundleFilename) {
+                return LocalizableStringsBundle(bundle: bundle)
+            }
+        }
+        
+        return nil
     }
     
     private func getBundle(bundleFilename: String) -> Bundle? {
