@@ -10,7 +10,7 @@ import Foundation
 
 public class LocalizableStringsBundleLoader {
     
-    private static let possibleEnglishBundleFilenames: [String] = [
+    public static let possibleEnglishBundleFilenames: [String] = [
         LocalizableStringsBundleLoader.enBundleFilename,
         LocalizableStringsBundleLoader.englishBundleFilename
     ]
@@ -21,12 +21,14 @@ public class LocalizableStringsBundleLoader {
     public let localizableStringsFilesBundle: Bundle
     public let baseInternationalization: BaseInternationalization?
     
-    public init(localizableStringsFilesBundle: Bundle?, isUsingBaseInternationalization: Bool, baseInternationalizationBaseLanguage: String = "en") {
+    public init(localizableStringsFilesBundle: Bundle?, isUsingBaseInternationalization: Bool, baseInternationalizationBaseLanguage: String? = nil) {
         
         self.localizableStringsFilesBundle = localizableStringsFilesBundle ?? Bundle.main
         
         if isUsingBaseInternationalization {
-            baseInternationalization = BaseInternationalization(baseLanguage: baseInternationalizationBaseLanguage)
+            baseInternationalization = BaseInternationalization(
+                baseLanguage: baseInternationalizationBaseLanguage ?? Self.enBundleFilename
+            )
         }
         else {
             baseInternationalization = nil

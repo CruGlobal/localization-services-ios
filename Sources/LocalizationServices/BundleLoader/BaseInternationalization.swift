@@ -19,6 +19,6 @@ public struct BaseInternationalization {
     }
     
     var isEnglish: Bool {
-        return baseLanguage == "en"
+        return LocalizableStringsBundleLoader.possibleEnglishBundleFilenames.contains(baseLanguage)
     }
 }
