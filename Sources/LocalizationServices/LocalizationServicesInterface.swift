@@ -10,6 +10,7 @@ import Foundation
 
 public protocol LocalizationServicesInterface {
  
+    func stringForLocale(localeIdentifier: String?, key: String) -> String?
     func stringForEnglish(key: String) -> String
     func stringForSystemElseEnglish(key: String) -> String
     func stringForLocaleElseEnglish(localeIdentifier: String?, key: String) -> String
