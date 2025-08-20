@@ -24,6 +24,11 @@ public class LocalizationServices: LocalizationServicesInterface {
         self.bundleLoader = bundleLoader
     }
     
+    public func stringForLocale(localeIdentifier: String?, key: String) -> String? {
+        
+        return stringsRepository.stringForLocale(localeIdentifier: localeIdentifier, key: key)
+    }
+    
     public func stringForEnglish(key: String) -> String {
         
         return stringsRepository.stringForEnglish(key: key) ?? key
