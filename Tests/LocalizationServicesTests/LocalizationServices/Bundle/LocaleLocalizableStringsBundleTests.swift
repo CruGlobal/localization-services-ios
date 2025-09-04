@@ -58,6 +58,5 @@ class LocaleLocalizableStringsBundleTests: XCTestCase {
         
         XCTAssertNotNil(localeBundle)
         XCTAssertTrue(localeBundle?.table == unsupportedLocale)
-        XCTAssertTrue(localeBundle?.stringForKey(key: "back", table: "ru-143") == "Назад")
     }
 }

@@ -27,14 +27,33 @@ public class LocalizableStringsBundle {
             return nil
         }
         
+        let returnValueIfNotFound: String = LocalizableStringsBundle.uniqueValue
+        
         let table: String? = self.table ?? table
         
-        let localizedString: String = bundle.localizedString(forKey: key, value: LocalizableStringsBundle.uniqueValue, table: table)
+        if let table = table, !table.isEmpty {
+            
+            let localizedString: String = getStringFromBundle(key: key, returnValueIfNotFound: returnValueIfNotFound, table: table)
+            
+            if localizedStringIsValid(localizedString: localizedString, returnValueIfNotFound: returnValueIfNotFound) {
+                return localizedString
+            }
+        }
         
-        guard !localizedString.isEmpty && localizedString != LocalizableStringsBundle.uniqueValue else {
+        let localizedString: String = bundle.localizedString(forKey: key, value: returnValueIfNotFound, table: nil)
+        
+        guard localizedStringIsValid(localizedString: localizedString, returnValueIfNotFound: returnValueIfNotFound) else {
             return nil
         }
         
         return localizedString
+    }
+    
+    private func getStringFromBundle(key: String, returnValueIfNotFound: String?, table: String?) -> String {
+        return bundle.localizedString(forKey: key, value: returnValueIfNotFound, table: table)
+    }
+    
+    private func localizedStringIsValid(localizedString: String, returnValueIfNotFound: String) -> Bool {
+        return !localizedString.isEmpty && localizedString != LocalizableStringsBundle.uniqueValue
     }
 }
