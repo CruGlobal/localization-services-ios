@@ -11,7 +11,7 @@ import XCTest
 
 class LocalizableStringsBundleLoaderTests: XCTestCase {
     
-    static let missingLocalizableStringsResource: String = "ru"
+    static let missingLocalizableStringsResource: String = "am"
     
     private let bundleLoaderUsingBaseInternationalization: LocalizableStringsBundleLoader = LocalizableStringsBundleLoader(
         localizableStringsFilesBundle: Bundle.getTestBundle(),
