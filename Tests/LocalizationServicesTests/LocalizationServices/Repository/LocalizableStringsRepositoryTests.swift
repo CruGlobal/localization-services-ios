@@ -114,6 +114,26 @@ class LocalizableStringsRepositoryTests: XCTestCase {
         XCTAssertNotNil(localizedString)
     }
     
+    func testStringForUnsupportedLocaleIsLoadedAndUsesTableName() {
+                
+        let localizedString: String? = stringsRepository.stringForLocale(
+            localeIdentifier: "ru-143",
+            key: "back"
+        )
+        
+        XCTAssertTrue(localizedString == "Назад")
+    }
+    
+    func testStringForUnsupportedLocaleFallsBackToBaseLocaleEs() {
+                
+        let localizedString: String? = stringsRepository.stringForLocale(
+            localeIdentifier: "es-143",
+            key: "test.value.yes"
+        )
+        
+        XCTAssertTrue(localizedString == "Sí")
+    }
+    
     // MARK: - System
     
     func testStringForSystemReturnsSpanishTranslationWhenSystemIsSpanish() {
