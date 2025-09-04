@@ -66,5 +66,14 @@ class LocalizationServicesTests: XCTestCase {
         XCTAssertEqual(missingStringForLocaleElseEnglish, missingPhraseKey)
         XCTAssertEqual(missingStringForLocaleElseSystemElseEnglish, missingPhraseKey)
     }
+    
+    func testStringForLocaleReturnsNilWhenPhraseDoesNotExist() {
+        
+        let existingString: String? = localizationServices.stringForLocale(localeIdentifier: "en", key: "test.value.yes")
+        let missingString: String? = localizationServices.stringForLocale(localeIdentifier: "en", key: LocalizableStringsBundleTests.missingStringPhraseKey)
+        
+        XCTAssertTrue(existingString == "yes")
+        XCTAssertNil(missingString)
+    }
 }
 

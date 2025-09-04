@@ -10,6 +10,7 @@ import Foundation
 
 enum LocaleId: String {
     case english = "en"
+    case russianCentralAsia = "ru-143"
     case spanish = "es"
 }
 

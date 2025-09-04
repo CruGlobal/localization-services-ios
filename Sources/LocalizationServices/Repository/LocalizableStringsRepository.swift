@@ -116,6 +116,7 @@ extension LocalizableStringsRepository {
         
         let systemLocaleIdentifier: String = getSystemLocaleIdentifier()
         let systemLocaleChanged: Bool = systemLocaleIdentifier != lastLoadedSystemLocalizableStringsBundle?.localeIdentifier
+        let enLocale: String = "en"
         
         if lastLoadedSystemLocalizableStringsBundle == nil || systemLocaleChanged {
             
@@ -123,9 +124,9 @@ extension LocalizableStringsRepository {
                 
                 lastLoadedSystemLocalizableStringsBundle = newSystemLocalizableStrings
             }
-            else if let currentSystemLocalizableStrings = self.lastLoadedSystemLocalizableStringsBundle, currentSystemLocalizableStrings.localeIdentifier != "en" {
+            else if let currentSystemLocalizableStrings = self.lastLoadedSystemLocalizableStringsBundle, currentSystemLocalizableStrings.localeIdentifier != enLocale {
                 
-                lastLoadedSystemLocalizableStringsBundle = LocaleLocalizableStringsBundle(localeIdentifier: "en", localeBundleLoader: localizableStringsBundleLoader)
+                lastLoadedSystemLocalizableStringsBundle = LocaleLocalizableStringsBundle(localeIdentifier: enLocale, localeBundleLoader: localizableStringsBundleLoader)
             }
         }
         
