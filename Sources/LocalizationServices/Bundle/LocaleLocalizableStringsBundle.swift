@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class LocaleLocalizableStringsBundle: LocalizableStringsBundle {
+public final class LocaleLocalizableStringsBundle: LocalizableStringsBundle {
     
     public let localeBundleLoader: LocalizableStringsBundleLoader
     public let locale: Locale

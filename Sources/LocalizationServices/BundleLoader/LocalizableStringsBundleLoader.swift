@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class LocalizableStringsBundleLoader {
+public final class LocalizableStringsBundleLoader {
     
     public static let possibleEnglishBundleFilenames: [String] = [
         LocalizableStringsBundleLoader.enBundleFilename,
