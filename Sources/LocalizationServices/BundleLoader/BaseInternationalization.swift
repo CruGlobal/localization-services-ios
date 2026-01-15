@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct BaseInternationalization {
+public struct BaseInternationalization: Sendable {
     
     public static let baseBundleFilename: String = "Base"
     

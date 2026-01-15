@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class LocalizableStringsRepository {
+public final class LocalizableStringsRepository {
     
     private var lastLoadedEnglishLocalizableStringsBundle: LocalizableStringsBundle?
     private var lastLoadedSystemLocalizableStringsBundle: LocaleLocalizableStringsBundle?
