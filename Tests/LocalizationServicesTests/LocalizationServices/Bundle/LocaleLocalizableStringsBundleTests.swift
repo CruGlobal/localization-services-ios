@@ -5,21 +5,15 @@
 //  Created by Levi Eggert on 9/4/25.
 //
 
-import XCTest
+import Foundation
+import Testing
 @testable import LocalizationServices
 
-class LocaleLocalizableStringsBundleTests: XCTestCase {
-    
-    override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
+struct LocaleLocalizableStringsBundleTests {
 
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-    
-    func testMissingLocaleResourceReturnsNilBundle() {
-        
+    @Test
+    func missingLocaleResourceReturnsNilBundle() {
+
         let localeBundle: LocaleLocalizableStringsBundle? = LocaleLocalizableStringsBundle(
             localeIdentifier: LocalizableStringsBundleLoaderTests.missingLocalizableStringsResource,
             localeBundleLoader: LocalizableStringsBundleLoader(
@@ -27,12 +21,13 @@ class LocaleLocalizableStringsBundleTests: XCTestCase {
                 isUsingBaseInternationalization: false
             )
         )
-        
-        XCTAssertNil(localeBundle)
+
+        #expect(localeBundle == nil)
     }
-    
-    func testExistingLocaleResourceReturnsBundle() {
-        
+
+    @Test
+    func existingLocaleResourceReturnsBundle() {
+
         let localeBundle: LocaleLocalizableStringsBundle? = LocaleLocalizableStringsBundle(
             localeIdentifier: "es",
             localeBundleLoader: LocalizableStringsBundleLoader(
@@ -40,14 +35,15 @@ class LocaleLocalizableStringsBundleTests: XCTestCase {
                 isUsingBaseInternationalization: false
             )
         )
-        
-        XCTAssertNotNil(localeBundle)
+
+        #expect(localeBundle != nil)
     }
-    
-    func testUnsupportedLocaleLoadsBaseLanguageLocale() {
-        
+
+    @Test
+    func unsupportedLocaleLoadsBaseLanguageLocale() throws {
+
         let unsupportedLocale: String = "ru-143"
-        
+
         let localeBundle: LocaleLocalizableStringsBundle? = LocaleLocalizableStringsBundle(
             localeIdentifier: unsupportedLocale,
             localeBundleLoader: LocalizableStringsBundleLoader(
@@ -55,8 +51,9 @@ class LocaleLocalizableStringsBundleTests: XCTestCase {
                 isUsingBaseInternationalization: false
             )
         )
-        
-        XCTAssertNotNil(localeBundle)
-        XCTAssertTrue(localeBundle?.table == unsupportedLocale)
+
+        let unwrappedLocaleBundle: LocaleLocalizableStringsBundle = try #require(localeBundle)
+
+        #expect(unwrappedLocaleBundle.localizableStringsBundle.table == unsupportedLocale)
     }
 }

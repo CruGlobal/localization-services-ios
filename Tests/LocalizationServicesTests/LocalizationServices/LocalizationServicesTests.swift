@@ -6,74 +6,71 @@
 //  Copyright © 2024 Cru. All rights reserved.
 //
 
-import XCTest
+import Foundation
+import Testing
 @testable import LocalizationServices
 
-class LocalizationServicesTests: XCTestCase {
- 
+@MainActor
+struct LocalizationServicesTests {
+
     private let localizationServices: LocalizationServices = LocalizationServices(
         localizableStringsFilesBundle: Bundle.getTestBundle(),
         isUsingBaseInternationalization: true
     )
-    
-    override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
 
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-    
-    func testStringInEnglishLocalizableStringsExists() {
-                
+    @Test
+    func stringInEnglishLocalizableStringsExists() {
+
         let localizedString: String? = localizationServices.stringForEnglish(
             key: LocalizableStringsKeys.testValueYes.key
         )
-        
-        XCTAssertNotNil(localizedString)
-        XCTAssertEqual(localizedString, "yes")
+
+        #expect(localizedString == "yes")
     }
-    
-    func testStringInEnglishLocalizableStringsdictExists() {
-                
+
+    @Test
+    func stringInEnglishLocalizableStringsdictExists() {
+
         let localizedString: String? = localizationServices.stringForEnglish(
             key: LocalizableStringsdictKeys.badgesToolsOpened.key
         )
-        
-        XCTAssertNotNil(localizedString)
+
+        #expect(localizedString != nil)
     }
-    
-    func testMissingStringInEnglishLocalizableStringsdictReturnsKeyValue() {
-                
+
+    @Test
+    func missingStringInEnglishLocalizableStringsdictReturnsKeyValue() {
+
         let missingPhraseKey: String = LocalizableStringsBundleTests.missingStringPhraseKey
         let localizedString: String = localizationServices.stringForEnglish(key: missingPhraseKey)
-        
-        XCTAssertEqual(localizedString, missingPhraseKey)
+
+        #expect(localizedString == missingPhraseKey)
     }
-    
-    func testMissingStringInLocalizableStringsReturnsKeyValue() {
-        
+
+    @Test
+    func missingStringInLocalizableStringsReturnsKeyValue() {
+
         let missingLocalizableStringsResource: String = LocalizableStringsBundleLoaderTests.missingLocalizableStringsResource
         let missingPhraseKey: String = LocalizableStringsBundleTests.missingStringPhraseKey
-        
+
         let missingStringForEnglish: String = localizationServices.stringForEnglish(key: missingPhraseKey)
         let missingStringForSystemElseEnglish: String = localizationServices.stringForSystemElseEnglish(key: missingPhraseKey)
         let missingStringForLocaleElseEnglish: String = localizationServices.stringForLocaleElseEnglish(localeIdentifier: missingLocalizableStringsResource, key: missingPhraseKey)
         let missingStringForLocaleElseSystemElseEnglish: String = localizationServices.stringForLocaleElseSystemElseEnglish(localeIdentifier: missingLocalizableStringsResource, key: missingPhraseKey)
-        
-        XCTAssertEqual(missingStringForEnglish, missingPhraseKey)
-        XCTAssertEqual(missingStringForSystemElseEnglish, missingPhraseKey)
-        XCTAssertEqual(missingStringForLocaleElseEnglish, missingPhraseKey)
-        XCTAssertEqual(missingStringForLocaleElseSystemElseEnglish, missingPhraseKey)
+
+        #expect(missingStringForEnglish == missingPhraseKey)
+        #expect(missingStringForSystemElseEnglish == missingPhraseKey)
+        #expect(missingStringForLocaleElseEnglish == missingPhraseKey)
+        #expect(missingStringForLocaleElseSystemElseEnglish == missingPhraseKey)
     }
-    
-    func testStringForLocaleReturnsNilWhenPhraseDoesNotExist() {
-        
+
+    @Test
+    func stringForLocaleReturnsNilWhenPhraseDoesNotExist() {
+
         let existingString: String? = localizationServices.stringForLocale(localeIdentifier: "en", key: "test.value.yes")
         let missingString: String? = localizationServices.stringForLocale(localeIdentifier: "en", key: LocalizableStringsBundleTests.missingStringPhraseKey)
-        
-        XCTAssertTrue(existingString == "yes")
-        XCTAssertNil(missingString)
+
+        #expect(existingString == "yes")
+        #expect(missingString == nil)
     }
 }
-
