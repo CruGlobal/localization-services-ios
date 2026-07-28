@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final class LocalizableStringsRepository {
+@MainActor public final class LocalizableStringsRepository {
     
     private var lastLoadedEnglishLocalizableStringsBundle: LocalizableStringsBundle?
     private var lastLoadedSystemLocalizableStringsBundle: LocaleLocalizableStringsBundle?
@@ -130,7 +130,7 @@ extension LocalizableStringsRepository {
             }
         }
         
-        return lastLoadedSystemLocalizableStringsBundle
+        return lastLoadedSystemLocalizableStringsBundle?.localizableStringsBundle
     }
     
     private func getSystemLocaleIdentifier() -> String {
@@ -155,7 +155,7 @@ extension LocalizableStringsRepository {
         if let lastLoadedLocaleLocalizableStringsBundle = self.lastLoadedLocaleLocalizableStringsBundle,
            lastLoadedLocaleLocalizableStringsBundle.localeIdentifier.lowercased() == localeIdentifier.lowercased() {
             
-            return lastLoadedLocaleLocalizableStringsBundle
+            return lastLoadedLocaleLocalizableStringsBundle.localizableStringsBundle
         }
         else {
             
@@ -164,7 +164,7 @@ extension LocalizableStringsRepository {
                 localeBundleLoader: localizableStringsBundleLoader
             )
                         
-            return lastLoadedLocaleLocalizableStringsBundle
+            return lastLoadedLocaleLocalizableStringsBundle?.localizableStringsBundle
         }
     }
 }

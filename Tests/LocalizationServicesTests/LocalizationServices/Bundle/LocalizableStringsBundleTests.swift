@@ -6,37 +6,33 @@
 //  Copyright © 2024 Cru. All rights reserved.
 //
 
-import XCTest
+import Foundation
+import Testing
 @testable import LocalizationServices
 
-class LocalizableStringsBundleTests: XCTestCase {
- 
+struct LocalizableStringsBundleTests {
+
     static let missingStringPhraseKey: String = "missing.string.phrase"
-    
+
     private let stringsBundle: LocalizableStringsBundle = LocalizableStringsBundle(bundle: Bundle.getTestBundle())
-    
-    override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+
+    @Test
+    func emptyKeyReturnsNil() {
+
+        #expect(stringsBundle.stringForKey(key: "") == nil)
     }
 
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-    
-    func testEmptyKeyReturnsNil() {
-        
-        XCTAssertNil(stringsBundle.stringForKey(key: ""))
-    }
-    
-    func testExistingPhraseReturnsAValue() {
-        
+    @Test
+    func existingPhraseReturnsAValue() {
+
         // Expects System to be in Spanish.  Configured in tests.
-        
-        XCTAssertEqual(stringsBundle.stringForKey(key: LocalizableStringsKeys.testValueYes.key), "Sí")
+
+        #expect(stringsBundle.stringForKey(key: LocalizableStringsKeys.testValueYes.key) == "Sí")
     }
-    
-    func testMissingPhraseReturnsANilValue() {
-        
-        XCTAssertNil(stringsBundle.stringForKey(key: LocalizableStringsBundleTests.missingStringPhraseKey))
+
+    @Test
+    func missingPhraseReturnsANilValue() {
+
+        #expect(stringsBundle.stringForKey(key: LocalizableStringsBundleTests.missingStringPhraseKey) == nil)
     }
 }

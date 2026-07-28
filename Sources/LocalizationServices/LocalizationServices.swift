@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final class LocalizationServices {
+@MainActor public final class LocalizationServices {
         
     public let stringsRepository: LocalizableStringsRepository
     public let bundleLoader: LocalizableStringsBundleLoader

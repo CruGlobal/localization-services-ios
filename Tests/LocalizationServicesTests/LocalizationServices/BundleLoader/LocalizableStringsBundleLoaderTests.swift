@@ -6,115 +6,117 @@
 //  Copyright © 2024 Cru. All rights reserved.
 //
 
-import XCTest
+import Foundation
+import Testing
 @testable import LocalizationServices
 
-class LocalizableStringsBundleLoaderTests: XCTestCase {
-    
+struct LocalizableStringsBundleLoaderTests {
+
     static let missingLocalizableStringsResource: String = "am"
-    
+
     private let bundleLoaderUsingBaseInternationalization: LocalizableStringsBundleLoader = LocalizableStringsBundleLoader(
         localizableStringsFilesBundle: Bundle.getTestBundle(),
         isUsingBaseInternationalization: true
     )
-    
+
     private let bundleLoaderNotUsingBaseInternationalization: LocalizableStringsBundleLoader = LocalizableStringsBundleLoader(
         localizableStringsFilesBundle: Bundle.getTestBundle(),
         isUsingBaseInternationalization: false
     )
-    
-    override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+
+    @Test
+    func loadingBaseLocalizableStringsExistsWhenUsingBaseInternationalization() {
+
+        #expect(bundleLoaderUsingBaseInternationalization.bundleForResource(bundleFilename: BaseInternationalization.baseBundleFilename) != nil, "Failed to load Base localizable strings.")
     }
 
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    @Test
+    func loadingBaseLocalizableStringsDictExistsWhenUsingBaseInternationalization() {
+
+        #expect(bundleLoaderUsingBaseInternationalization.bundleForResource(bundleFilename: BaseInternationalization.baseBundleFilename) != nil, "Failed to load Base localizable stringsdict.")
     }
-    
-    func testLoadingBaseLocalizableStringsExists() {
-        
+
+    @Test
+    func loadingBaseLocalizableStringsDoesNotExistWhenNotUsingBaseInternationalization() {
+
+        #expect(bundleLoaderNotUsingBaseInternationalization.bundleForResource(bundleFilename: BaseInternationalization.baseBundleFilename) == nil, "Should not load Base localizable strings.")
     }
-    
-    func testLoadingBaseLocalizableStringsExistsWhenUsingBaseInternationalization() {
-                                            
-        XCTAssertNotNil(bundleLoaderUsingBaseInternationalization.bundleForResource(bundleFilename: BaseInternationalization.baseBundleFilename), "Failed to load Base localizable strings.")
+
+    @Test
+    func loadingBaseLocalizableStringsDictDoesNotExistWhenNotUsingBaseInternationalization() {
+
+        #expect(bundleLoaderNotUsingBaseInternationalization.bundleForResource(bundleFilename: BaseInternationalization.baseBundleFilename) == nil, "Should not load Base localizable stringsdict.")
     }
-    
-    func testLoadingBaseLocalizableStringsDictExistsWhenUsingBaseInternationalization() {
-                                   
-        XCTAssertNotNil(bundleLoaderUsingBaseInternationalization.bundleForResource(bundleFilename: BaseInternationalization.baseBundleFilename), "Failed to load Base localizable stringsdict.")
+
+    @Test
+    func loadingEnglishLocalizableStringsExistsWhenUsingBaseInternationalization() {
+
+        #expect(bundleLoaderUsingBaseInternationalization.getEnglishBundle() != nil, "Failed to load English localizable strings.")
+
+        #expect(bundleLoaderUsingBaseInternationalization.bundleForResource(bundleFilename: LocaleId.english.id) != nil, "Failed to load English localizable strings.")
     }
-    
-    func testLoadingBaseLocalizableStringsDoesNotExistWhenNotUsingBaseInternationalization() {
-                                            
-        XCTAssertNil(bundleLoaderNotUsingBaseInternationalization.bundleForResource(bundleFilename: BaseInternationalization.baseBundleFilename), "Should not load Base localizable strings.")
+
+    @Test
+    func loadingEnglishLocalizableStringsDictExistsWhenUsingBaseInternationalization() {
+
+        #expect(bundleLoaderUsingBaseInternationalization.getEnglishBundle() != nil, "Failed to load English localizable stringsdict.")
+
+        #expect(bundleLoaderUsingBaseInternationalization.bundleForResource(bundleFilename: LocaleId.english.id) != nil, "Failed to load English localizable stringsdict.")
     }
-    
-    func testLoadingBaseLocalizableStringsDictDoesNotExistWhenNotUsingBaseInternationalization() {
-                                   
-        XCTAssertNil(bundleLoaderNotUsingBaseInternationalization.bundleForResource(bundleFilename: BaseInternationalization.baseBundleFilename), "Should not load Base localizable stringsdict.")
+
+    @Test
+    func loadingEnglishLocalizableStringsExistsWhenNotUsingBaseInternationalization() {
+
+        #expect(bundleLoaderNotUsingBaseInternationalization.getEnglishBundle() != nil, "Failed to load English localizable strings.")
+
+        #expect(bundleLoaderNotUsingBaseInternationalization.bundleForResource(bundleFilename: LocaleId.english.id) != nil, "Failed to load English localizable strings.")
     }
-    
-    func testLoadingEnglishLocalizableStringsExistsWhenUsingBaseInternationalization() {
-                                    
-        XCTAssertNotNil(bundleLoaderUsingBaseInternationalization.getEnglishBundle(), "Failed to load English localizable strings.")
-        
-        XCTAssertNotNil(bundleLoaderUsingBaseInternationalization.bundleForResource(bundleFilename: LocaleId.english.id), "Failed to load English localizable strings.")
+
+    @Test
+    func loadingEnglishLocalizableStringsDictExistsWhenNotUsingBaseInternationalization() {
+
+        #expect(bundleLoaderNotUsingBaseInternationalization.getEnglishBundle() != nil, "Failed to load English localizable stringsdict.")
+
+        #expect(bundleLoaderNotUsingBaseInternationalization.bundleForResource(bundleFilename: LocaleId.english.id) != nil, "Failed to load English localizable stringsdict.")
     }
-    
-    func testLoadingEnglishLocalizableStringsDictExistsWhenUsingBaseInternationalization() {
-                           
-        XCTAssertNotNil(bundleLoaderUsingBaseInternationalization.getEnglishBundle(), "Failed to load English localizable stringsdict.")
-        
-        XCTAssertNotNil(bundleLoaderUsingBaseInternationalization.bundleForResource(bundleFilename: LocaleId.english.id), "Failed to load English localizable stringsdict.")
+
+    @Test
+    func loadingSpanishLocalizableStringsExists() {
+
+        #expect(bundleLoaderUsingBaseInternationalization.bundleForResource(bundleFilename: LocaleId.spanish.id) != nil, "Failed to load Spanish localizable strings.")
+
+        #expect(bundleLoaderNotUsingBaseInternationalization.bundleForResource(bundleFilename: LocaleId.spanish.id) != nil, "Failed to load Spanish localizable strings.")
     }
-    
-    func testLoadingEnglishLocalizableStringsExistsWhenNotUsingBaseInternationalization() {
-                                    
-        XCTAssertNotNil(bundleLoaderNotUsingBaseInternationalization.getEnglishBundle(), "Failed to load English localizable strings.")
-        
-        XCTAssertNotNil(bundleLoaderNotUsingBaseInternationalization.bundleForResource(bundleFilename: LocaleId.english.id), "Failed to load English localizable strings.")
+
+    @Test
+    func loadingSpanishLocalizableStringsDictExists() {
+
+        #expect(bundleLoaderUsingBaseInternationalization.bundleForResource(bundleFilename: LocaleId.spanish.id) != nil, "Failed to load Spanish localizable stringsdict.")
+
+        #expect(bundleLoaderNotUsingBaseInternationalization.bundleForResource(bundleFilename: LocaleId.spanish.id) != nil, "Failed to load Spanish localizable stringsdict.")
     }
-    
-    func testLoadingEnglishLocalizableStringsDictExistsWhenNotUsingBaseInternationalization() {
-                           
-        XCTAssertNotNil(bundleLoaderNotUsingBaseInternationalization.getEnglishBundle(), "Failed to load English localizable stringsdict.")
-        
-        XCTAssertNotNil(bundleLoaderNotUsingBaseInternationalization.bundleForResource(bundleFilename: LocaleId.english.id), "Failed to load English localizable stringsdict.")
+
+    @Test
+    func loadingLocalizableStringsBundleDoesNotExist() {
+
+        #expect(bundleLoaderUsingBaseInternationalization.bundleForResource(bundleFilename: LocalizableStringsBundleLoaderTests.missingLocalizableStringsResource) == nil)
+
+        #expect(bundleLoaderNotUsingBaseInternationalization.bundleForResource(bundleFilename: LocalizableStringsBundleLoaderTests.missingLocalizableStringsResource) == nil)
     }
-    
-    func testLoadingSpanishLocalizableStringsExists() {
-                                            
-        XCTAssertNotNil(bundleLoaderUsingBaseInternationalization.bundleForResource(bundleFilename: LocaleId.spanish.id), "Failed to load Spanish localizable strings.")
-        
-        XCTAssertNotNil(bundleLoaderNotUsingBaseInternationalization.bundleForResource(bundleFilename: LocaleId.spanish.id), "Failed to load Spanish localizable strings.")
+
+    @Test
+    func loadingLocalizableStringsdictBundleDoesNotExist() {
+
+        #expect(bundleLoaderUsingBaseInternationalization.bundleForResource(bundleFilename: LocalizableStringsBundleLoaderTests.missingLocalizableStringsResource) == nil)
+
+        #expect(bundleLoaderNotUsingBaseInternationalization.bundleForResource(bundleFilename: LocalizableStringsBundleLoaderTests.missingLocalizableStringsResource) == nil)
     }
-    
-    func testLoadingSpanishLocalizableStringsDictExists() {
-                                   
-        XCTAssertNotNil(bundleLoaderUsingBaseInternationalization.bundleForResource(bundleFilename: LocaleId.spanish.id), "Failed to load Spanish localizable stringsdict.")
-        
-        XCTAssertNotNil(bundleLoaderNotUsingBaseInternationalization.bundleForResource(bundleFilename: LocaleId.spanish.id), "Failed to load Spanish localizable stringsdict.")
-    }
-    
-    func testLoadingLocalizableStringsBundleDoesNotExist() {
-                
-        XCTAssertNil(bundleLoaderUsingBaseInternationalization.bundleForResource(bundleFilename: LocalizableStringsBundleLoaderTests.missingLocalizableStringsResource))
-        
-        XCTAssertNil(bundleLoaderNotUsingBaseInternationalization.bundleForResource(bundleFilename: LocalizableStringsBundleLoaderTests.missingLocalizableStringsResource))
-    }
-    
-    func testLoadingLocalizableStringsdictBundleDoesNotExist() {
-        
-        XCTAssertNil(bundleLoaderUsingBaseInternationalization.bundleForResource(bundleFilename: LocalizableStringsBundleLoaderTests.missingLocalizableStringsResource))
-        
-        XCTAssertNil(bundleLoaderNotUsingBaseInternationalization.bundleForResource(bundleFilename: LocalizableStringsBundleLoaderTests.missingLocalizableStringsResource))
-    }
-    
-    func testEmptyBundleFilenameShouldReturnNil() {
-        
-        XCTAssertNil(bundleLoaderUsingBaseInternationalization.bundleForResource(bundleFilename: ""))
-        
-        XCTAssertNil(bundleLoaderNotUsingBaseInternationalization.bundleForResource(bundleFilename: ""))
+
+    @Test
+    func emptyBundleFilenameShouldReturnNil() {
+
+        #expect(bundleLoaderUsingBaseInternationalization.bundleForResource(bundleFilename: "") == nil)
+
+        #expect(bundleLoaderNotUsingBaseInternationalization.bundleForResource(bundleFilename: "") == nil)
     }
 }
