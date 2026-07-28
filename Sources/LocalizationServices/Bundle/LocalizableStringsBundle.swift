@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class LocalizableStringsBundle {
+public final class LocalizableStringsBundle: Sendable {
     
     private static let uniqueValue: String = UUID().uuidString
     

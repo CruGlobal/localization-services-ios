@@ -8,11 +8,12 @@
 
 import Foundation
 
-public final class LocaleLocalizableStringsBundle: LocalizableStringsBundle {
+public final class LocaleLocalizableStringsBundle: Sendable {
     
     public let localeBundleLoader: LocalizableStringsBundleLoader
     public let locale: Locale
     public let localeIdentifier: String
+    public let localizableStringsBundle: LocalizableStringsBundle
     
     public init?(localeIdentifier: String, localeBundleLoader: LocalizableStringsBundleLoader) {
         
@@ -21,10 +22,10 @@ public final class LocaleLocalizableStringsBundle: LocalizableStringsBundle {
         self.localeIdentifier = localeIdentifier
         
         if let localeBundle = localeBundleLoader.bundleForResource(bundleFilename: localeIdentifier) {
-            super.init(bundle: localeBundle.bundle)
+            localizableStringsBundle = LocalizableStringsBundle(bundle: localeBundle.bundle)
         }
         else if Self.hasRegionOrScriptCode(locale: locale), let languageCode = Self.getLanguageCode(locale: locale), let languageCodeBundle = localeBundleLoader.bundleForResource(bundleFilename: languageCode) {
-            super.init(bundle: languageCodeBundle.bundle, table: localeIdentifier)
+            localizableStringsBundle = LocalizableStringsBundle(bundle: languageCodeBundle.bundle, table: localeIdentifier)
         }
         else {
             return nil
