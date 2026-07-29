@@ -10,15 +10,23 @@ import Foundation
 
 @MainActor public final class LocalizableStringsRepository {
     
-    private var lastLoadedEnglishLocalizableStringsBundle: LocalizableStringsBundle?
-    private var lastLoadedSystemLocalizableStringsBundle: LocaleLocalizableStringsBundle?
-    private var lastLoadedLocaleLocalizableStringsBundle: LocaleLocalizableStringsBundle?
+    private static let englishStringsBundle: String = "en"
     
+    private let stringsBundlePool: LocalizableStringsBundlePool
+        
     public let localizableStringsBundleLoader: LocalizableStringsBundleLoader
     
     public init(localizableStringsBundleLoader: LocalizableStringsBundleLoader) {
         
         self.localizableStringsBundleLoader = localizableStringsBundleLoader
+        self.stringsBundlePool = LocalizableStringsBundlePool(
+            localizableStringsBundleLoader: localizableStringsBundleLoader
+        )
+        
+        stringsBundlePool.addStringsBundle(
+            localeIdentifier: Self.englishStringsBundle,
+            stringsBundle: localizableStringsBundleLoader.getEnglishBundle()
+        )
     }
     
     public func stringForEnglish(key: String) -> String? {
@@ -92,19 +100,8 @@ import Foundation
 extension LocalizableStringsRepository {
     
     public func getEnglishLocalizableStringsBundle() -> LocalizableStringsBundle? {
-                
-        if let lastLoadedEnglishLocalizableStringsBundle = self.lastLoadedEnglishLocalizableStringsBundle {
-            
-            return lastLoadedEnglishLocalizableStringsBundle
-        }
-        else if let englishBundle = localizableStringsBundleLoader.getEnglishBundle() {
-           
-            lastLoadedEnglishLocalizableStringsBundle = englishBundle
-            
-            return englishBundle
-        }
         
-        return nil
+        return stringsBundlePool.getStringsBundle(localeIdentifier: Self.englishStringsBundle)
     }
 }
 
@@ -115,22 +112,8 @@ extension LocalizableStringsRepository {
     public func getSystemLocalizableStringsBundle() -> LocalizableStringsBundle? {
         
         let systemLocaleIdentifier: String = getSystemLocaleIdentifier()
-        let systemLocaleChanged: Bool = systemLocaleIdentifier != lastLoadedSystemLocalizableStringsBundle?.localeIdentifier
-        let enLocale: String = "en"
         
-        if lastLoadedSystemLocalizableStringsBundle == nil || systemLocaleChanged {
-            
-            if let newSystemLocalizableStrings = LocaleLocalizableStringsBundle(localeIdentifier: systemLocaleIdentifier, localeBundleLoader: localizableStringsBundleLoader) {
-                
-                lastLoadedSystemLocalizableStringsBundle = newSystemLocalizableStrings
-            }
-            else if let currentSystemLocalizableStrings = self.lastLoadedSystemLocalizableStringsBundle, currentSystemLocalizableStrings.localeIdentifier != enLocale {
-                
-                lastLoadedSystemLocalizableStringsBundle = LocaleLocalizableStringsBundle(localeIdentifier: enLocale, localeBundleLoader: localizableStringsBundleLoader)
-            }
-        }
-        
-        return lastLoadedSystemLocalizableStringsBundle?.localizableStringsBundle
+        return stringsBundlePool.getStringsBundle(localeIdentifier: systemLocaleIdentifier)
     }
     
     private func getSystemLocaleIdentifier() -> String {
@@ -152,19 +135,6 @@ extension LocalizableStringsRepository {
             return nil
         }
         
-        if let lastLoadedLocaleLocalizableStringsBundle = self.lastLoadedLocaleLocalizableStringsBundle,
-           lastLoadedLocaleLocalizableStringsBundle.localeIdentifier.lowercased() == localeIdentifier.lowercased() {
-            
-            return lastLoadedLocaleLocalizableStringsBundle.localizableStringsBundle
-        }
-        else {
-            
-            lastLoadedLocaleLocalizableStringsBundle = LocaleLocalizableStringsBundle(
-                localeIdentifier: localeIdentifier,
-                localeBundleLoader: localizableStringsBundleLoader
-            )
-                        
-            return lastLoadedLocaleLocalizableStringsBundle?.localizableStringsBundle
-        }
+        return stringsBundlePool.getStringsBundle(localeIdentifier: localeIdentifier)
     }
 }
