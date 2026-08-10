@@ -9,7 +9,6 @@ import Foundation
 import Testing
 @testable import LocalizationServices
 
-@MainActor
 struct LocalizableStringsBundlePoolTests {
 
     private static let missingLocale: String = LocalizableStringsBundleLoaderTests.missingLocalizableStringsResource

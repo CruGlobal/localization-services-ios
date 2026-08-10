@@ -8,7 +8,7 @@
 
 import Foundation
 
-@MainActor public final class LocalizationServices {
+public final class LocalizationServices: Sendable {
         
     public let stringsRepository: LocalizableStringsRepository
     public let bundleLoader: LocalizableStringsBundleLoader
@@ -24,28 +24,31 @@ import Foundation
         self.bundleLoader = bundleLoader
     }
     
-    public func stringForLocale(localeIdentifier: String?, key: String) -> String? {
+    public func stringForLocale(localeIdentifier: String?, key: String) async -> String? {
         
-        return stringsRepository.stringForLocale(localeIdentifier: localeIdentifier, key: key)
+        return await stringsRepository.stringForLocale(localeIdentifier: localeIdentifier, key: key)
     }
     
-    public func stringForEnglish(key: String) -> String {
+    public func stringForEnglish(key: String) async -> String {
         
-        return stringsRepository.stringForEnglish(key: key) ?? key
+        return await stringsRepository.stringForEnglish(key: key) ?? key
     }
     
-    public func stringForSystemElseEnglish(key: String) -> String {
+    public func stringForSystemElseEnglish(key: String) async -> String {
         
-        return stringsRepository.stringForSystemElseEnglish(key: key) ?? key
+        return await stringsRepository.stringForSystemElseEnglish(key: key) ?? key
     }
     
-    public func stringForLocaleElseEnglish(localeIdentifier: String?, key: String) -> String {
+    public func stringForLocaleElseEnglish(localeIdentifier: String?, key: String) async -> String {
 
-        return stringsRepository.stringForLocaleElseEnglish(localeIdentifier: localeIdentifier, key: key) ?? key
+        return await stringsRepository.stringForLocaleElseEnglish(localeIdentifier: localeIdentifier, key: key) ?? key
     }
     
-    public func stringForLocaleElseSystemElseEnglish(localeIdentifier: String?, key: String) -> String {
+    public func stringForLocaleElseSystemElseEnglish(localeIdentifier: String?, key: String) async -> String {
         
-        return stringsRepository.stringForLocaleElseSystemElseEnglish(localeIdentifier: localeIdentifier, key: key) ?? key
+        return await stringsRepository.stringForLocaleElseSystemElseEnglish(
+            localeIdentifier: localeIdentifier,
+            key: key
+        ) ?? key
     }
 }

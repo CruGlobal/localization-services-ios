@@ -8,7 +8,7 @@
 
 import Foundation
 
-@MainActor public final class LocalizableStringsRepository {
+public actor LocalizableStringsRepository {
     
     private static let englishStringsBundle: String = "en"
     
@@ -22,30 +22,29 @@ import Foundation
         self.stringsBundlePool = LocalizableStringsBundlePool(
             localizableStringsBundleLoader: localizableStringsBundleLoader
         )
-        
-        stringsBundlePool.addStringsBundle(
-            localeIdentifier: Self.englishStringsBundle,
-            stringsBundle: localizableStringsBundleLoader.getEnglishBundle()
-        )
     }
     
-    public func stringForEnglish(key: String) -> String? {
+    public func stringForEnglish(key: String) async -> String? {
         
-        return getEnglishLocalizableStringsBundle()?.stringForKey(key: key)
+        let stringsBundle = await getEnglishLocalizableStringsBundle()
+        
+        return stringsBundle?.stringForKey(key: key)
     }
     
-    public func stringForSystem(key: String) -> String? {
+    public func stringForSystem(key: String) async -> String? {
         
-        return getSystemLocalizableStringsBundle()?.stringForKey(key: key)
+        let stringsBundle = await  getSystemLocalizableStringsBundle()
+        
+        return stringsBundle?.stringForKey(key: key)
     }
     
-    public func stringForSystemElseEnglish(key: String) -> String? {
+    public func stringForSystemElseEnglish(key: String) async -> String? {
         
-        if let systemString = stringForSystem(key: key) {
+        if let systemString = await stringForSystem(key: key) {
             
             return systemString
         }
-        else if let englishString = stringForEnglish(key: key) {
+        else if let englishString = await stringForEnglish(key: key) {
             
             return englishString
         }
@@ -53,22 +52,24 @@ import Foundation
         return nil
     }
     
-    public func stringForLocale(localeIdentifier: String?, key: String) -> String? {
+    public func stringForLocale(localeIdentifier: String?, key: String) async -> String? {
         
         guard let localeIdentifier = localeIdentifier, !localeIdentifier.isEmpty else {
             return nil
         }
         
-        return getLocaleStringsBundle(localeIdentifier: localeIdentifier)?.stringForKey(key: key)
+        let stringsBundle = await  getLocaleStringsBundle(localeIdentifier: localeIdentifier)
+        
+        return stringsBundle?.stringForKey(key: key)
     }
     
-    public func stringForLocaleElseEnglish(localeIdentifier: String?, key: String) -> String? {
+    public func stringForLocaleElseEnglish(localeIdentifier: String?, key: String) async -> String? {
         
-        if let localeString = stringForLocale(localeIdentifier: localeIdentifier, key: key) {
+        if let localeString = await stringForLocale(localeIdentifier: localeIdentifier, key: key) {
             
             return localeString
         }
-        else if let englishString = stringForEnglish(key: key) {
+        else if let englishString = await stringForEnglish(key: key) {
             
             return englishString
         }
@@ -76,17 +77,17 @@ import Foundation
         return nil
     }
     
-    public func stringForLocaleElseSystemElseEnglish(localeIdentifier: String?, key: String) -> String? {
+    public func stringForLocaleElseSystemElseEnglish(localeIdentifier: String?, key: String) async -> String? {
 
-        if let localeString = stringForLocale(localeIdentifier: localeIdentifier, key: key) {
+        if let localeString = await stringForLocale(localeIdentifier: localeIdentifier, key: key) {
             
             return localeString
         }
-        else if let systemString = stringForSystem(key: key) {
+        else if let systemString = await stringForSystem(key: key) {
             
             return systemString
         }
-        else if let englishString = stringForEnglish(key: key) {
+        else if let englishString = await stringForEnglish(key: key) {
             
             return englishString
         }
@@ -99,9 +100,9 @@ import Foundation
 
 extension LocalizableStringsRepository {
     
-    public func getEnglishLocalizableStringsBundle() -> LocalizableStringsBundle? {
+    public func getEnglishLocalizableStringsBundle() async -> LocalizableStringsBundle? {
         
-        return stringsBundlePool.getStringsBundle(localeIdentifier: Self.englishStringsBundle)
+        return await stringsBundlePool.getStringsBundle(localeIdentifier: Self.englishStringsBundle)
     }
 }
 
@@ -109,11 +110,11 @@ extension LocalizableStringsRepository {
 
 extension LocalizableStringsRepository {
     
-    public func getSystemLocalizableStringsBundle() -> LocalizableStringsBundle? {
+    public func getSystemLocalizableStringsBundle() async -> LocalizableStringsBundle? {
         
         let systemLocaleIdentifier: String = getSystemLocaleIdentifier()
         
-        return stringsBundlePool.getStringsBundle(localeIdentifier: systemLocaleIdentifier)
+        return await stringsBundlePool.getStringsBundle(localeIdentifier: systemLocaleIdentifier)
     }
     
     private func getSystemLocaleIdentifier() -> String {
@@ -129,12 +130,12 @@ extension LocalizableStringsRepository {
 
 extension LocalizableStringsRepository {
     
-    public func getLocaleStringsBundle(localeIdentifier: String) -> LocalizableStringsBundle? {
+    public func getLocaleStringsBundle(localeIdentifier: String) async -> LocalizableStringsBundle? {
                 
         guard !localeIdentifier.isEmpty else {
             return nil
         }
         
-        return stringsBundlePool.getStringsBundle(localeIdentifier: localeIdentifier)
+        return await stringsBundlePool.getStringsBundle(localeIdentifier: localeIdentifier)
     }
 }

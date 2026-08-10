@@ -7,7 +7,7 @@
 
 import Foundation
 
-@MainActor final class LocalizableStringsBundlePool {
+actor LocalizableStringsBundlePool {
     
     final class PoolObject {
         

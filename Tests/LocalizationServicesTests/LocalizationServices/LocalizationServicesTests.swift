@@ -10,7 +10,6 @@ import Foundation
 import Testing
 @testable import LocalizationServices
 
-@MainActor
 struct LocalizationServicesTests {
 
     private let localizationServices: LocalizationServices = LocalizationServices(
