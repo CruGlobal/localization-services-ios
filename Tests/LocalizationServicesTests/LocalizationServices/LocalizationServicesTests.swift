@@ -10,7 +10,6 @@ import Foundation
 import Testing
 @testable import LocalizationServices
 
-@MainActor
 struct LocalizationServicesTests {
 
     private let localizationServices: LocalizationServices = LocalizationServices(
@@ -19,9 +18,9 @@ struct LocalizationServicesTests {
     )
 
     @Test
-    func stringInEnglishLocalizableStringsExists() {
+    func stringInEnglishLocalizableStringsExists() async {
 
-        let localizedString: String? = localizationServices.stringForEnglish(
+        let localizedString: String? = await localizationServices.stringForEnglish(
             key: LocalizableStringsKeys.testValueYes.key
         )
 
@@ -29,9 +28,9 @@ struct LocalizationServicesTests {
     }
 
     @Test
-    func stringInEnglishLocalizableStringsdictExists() {
+    func stringInEnglishLocalizableStringsdictExists() async {
 
-        let localizedString: String? = localizationServices.stringForEnglish(
+        let localizedString: String? = await localizationServices.stringForEnglish(
             key: LocalizableStringsdictKeys.badgesToolsOpened.key
         )
 
@@ -39,24 +38,24 @@ struct LocalizationServicesTests {
     }
 
     @Test
-    func missingStringInEnglishLocalizableStringsdictReturnsKeyValue() {
+    func missingStringInEnglishLocalizableStringsdictReturnsKeyValue() async {
 
         let missingPhraseKey: String = LocalizableStringsBundleTests.missingStringPhraseKey
-        let localizedString: String = localizationServices.stringForEnglish(key: missingPhraseKey)
+        let localizedString: String = await localizationServices.stringForEnglish(key: missingPhraseKey)
 
         #expect(localizedString == missingPhraseKey)
     }
 
     @Test
-    func missingStringInLocalizableStringsReturnsKeyValue() {
+    func missingStringInLocalizableStringsReturnsKeyValue() async {
 
         let missingLocalizableStringsResource: String = LocalizableStringsBundleLoaderTests.missingLocalizableStringsResource
         let missingPhraseKey: String = LocalizableStringsBundleTests.missingStringPhraseKey
 
-        let missingStringForEnglish: String = localizationServices.stringForEnglish(key: missingPhraseKey)
-        let missingStringForSystemElseEnglish: String = localizationServices.stringForSystemElseEnglish(key: missingPhraseKey)
-        let missingStringForLocaleElseEnglish: String = localizationServices.stringForLocaleElseEnglish(localeIdentifier: missingLocalizableStringsResource, key: missingPhraseKey)
-        let missingStringForLocaleElseSystemElseEnglish: String = localizationServices.stringForLocaleElseSystemElseEnglish(localeIdentifier: missingLocalizableStringsResource, key: missingPhraseKey)
+        let missingStringForEnglish: String = await localizationServices.stringForEnglish(key: missingPhraseKey)
+        let missingStringForSystemElseEnglish: String = await localizationServices.stringForSystemElseEnglish(key: missingPhraseKey)
+        let missingStringForLocaleElseEnglish: String = await localizationServices.stringForLocaleElseEnglish(localeIdentifier: missingLocalizableStringsResource, key: missingPhraseKey)
+        let missingStringForLocaleElseSystemElseEnglish: String = await localizationServices.stringForLocaleElseSystemElseEnglish(localeIdentifier: missingLocalizableStringsResource, key: missingPhraseKey)
 
         #expect(missingStringForEnglish == missingPhraseKey)
         #expect(missingStringForSystemElseEnglish == missingPhraseKey)
@@ -65,10 +64,10 @@ struct LocalizationServicesTests {
     }
 
     @Test
-    func stringForLocaleReturnsNilWhenPhraseDoesNotExist() {
+    func stringForLocaleReturnsNilWhenPhraseDoesNotExist() async {
 
-        let existingString: String? = localizationServices.stringForLocale(localeIdentifier: "en", key: "test.value.yes")
-        let missingString: String? = localizationServices.stringForLocale(localeIdentifier: "en", key: LocalizableStringsBundleTests.missingStringPhraseKey)
+        let existingString: String? = await localizationServices.stringForLocale(localeIdentifier: "en", key: "test.value.yes")
+        let missingString: String? = await localizationServices.stringForLocale(localeIdentifier: "en", key: LocalizableStringsBundleTests.missingStringPhraseKey)
 
         #expect(existingString == "yes")
         #expect(missingString == nil)

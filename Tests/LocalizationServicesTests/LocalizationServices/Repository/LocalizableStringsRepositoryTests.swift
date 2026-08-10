@@ -10,7 +10,6 @@ import Foundation
 import Testing
 @testable import LocalizationServices
 
-@MainActor
 struct LocalizableStringsRepositoryTests {
 
     private let stringsRepository: LocalizableStringsRepository = LocalizableStringsRepository(
@@ -23,9 +22,9 @@ struct LocalizableStringsRepositoryTests {
     // MARK: - English
 
     @Test
-    func stringInEnglishLocalizableStringsExists() {
+    func stringInEnglishLocalizableStringsExists() async {
 
-        let localizedString: String? = stringsRepository.stringForEnglish(
+        let localizedString: String? = await stringsRepository.stringForEnglish(
             key: LocalizableStringsKeys.testValueYes.key
         )
 
@@ -33,9 +32,9 @@ struct LocalizableStringsRepositoryTests {
     }
 
     @Test
-    func stringInEnglishLocalizableStringsdictExists() {
+    func stringInEnglishLocalizableStringsdictExists() async {
 
-        let localizedString: String? = stringsRepository.stringForEnglish(
+        let localizedString: String? = await stringsRepository.stringForEnglish(
             key: LocalizableStringsdictKeys.badgesToolsOpened.key
         )
 
@@ -45,9 +44,9 @@ struct LocalizableStringsRepositoryTests {
     // MARK: - String For Locale
 
     @Test
-    func stringInSpanishLocalizableStringsExists() {
+    func stringInSpanishLocalizableStringsExists() async {
 
-        let localizedString: String? = stringsRepository.stringForLocale(
+        let localizedString: String? = await stringsRepository.stringForLocale(
             localeIdentifier: LocaleId.spanish.id,
             key: LocalizableStringsKeys.testValueYes.key
         )
@@ -56,36 +55,36 @@ struct LocalizableStringsRepositoryTests {
     }
 
     @Test
-    func stringForLocaleElseEnglishReturnsLocale() {
+    func stringForLocaleElseEnglishReturnsLocale() async {
 
-        #expect(stringsRepository.stringForLocaleElseEnglish(localeIdentifier: LocaleId.spanish.id, key: "test.value.yes") == "Sí")
+        #expect(await stringsRepository.stringForLocaleElseEnglish(localeIdentifier: LocaleId.spanish.id, key: "test.value.yes") == "Sí")
     }
 
     @Test
-    func stringForLocaleElseSystemElseEnglishReturnsLocale() {
+    func stringForLocaleElseSystemElseEnglishReturnsLocale() async {
 
-        #expect(stringsRepository.stringForLocaleElseSystemElseEnglish(localeIdentifier: LocaleId.spanish.id, key: "test.value.yes") == "Sí")
+        #expect(await stringsRepository.stringForLocaleElseSystemElseEnglish(localeIdentifier: LocaleId.spanish.id, key: "test.value.yes") == "Sí")
     }
 
     @Test
-    func stringForLocaleElseSystemElseEnglishReturnsEnglish() {
+    func stringForLocaleElseSystemElseEnglishReturnsEnglish() async {
 
-        let localizedString: String? = stringsRepository.stringForLocaleElseSystemElseEnglish(localeIdentifier: LocaleId.spanish.id, key: "test.value.englishOnly")
+        let localizedString: String? = await stringsRepository.stringForLocaleElseSystemElseEnglish(localeIdentifier: LocaleId.spanish.id, key: "test.value.englishOnly")
 
         #expect(localizedString == "English Only")
     }
 
     @Test
-    func stringForLocaleReturnsNil() {
+    func stringForLocaleReturnsNil() async {
 
-        #expect(stringsRepository.stringForLocale(localeIdentifier: nil, key: "test.value.yes") == nil)
-        #expect(stringsRepository.stringForLocale(localeIdentifier: "", key: "test.value.yes") == nil)
+        #expect(await stringsRepository.stringForLocale(localeIdentifier: nil, key: "test.value.yes") == nil)
+        #expect(await stringsRepository.stringForLocale(localeIdentifier: "", key: "test.value.yes") == nil)
     }
 
     @Test
-    func stringForLocaleDoesNotExist() {
+    func stringForLocaleDoesNotExist() async {
 
-        let localizedString: String? = stringsRepository.stringForLocale(
+        let localizedString: String? = await stringsRepository.stringForLocale(
             localeIdentifier: LocalizableStringsBundleLoaderTests.missingLocalizableStringsResource,
             key: LocalizableStringsKeys.testValueYes.key
         )
@@ -94,9 +93,9 @@ struct LocalizableStringsRepositoryTests {
     }
 
     @Test
-    func stringForLocaleFallsBackToEnglish() {
+    func stringForLocaleFallsBackToEnglish() async {
 
-        let localizedString: String? = stringsRepository.stringForLocaleElseEnglish(
+        let localizedString: String? = await stringsRepository.stringForLocaleElseEnglish(
             localeIdentifier: LocalizableStringsBundleLoaderTests.missingLocalizableStringsResource,
             key: LocalizableStringsKeys.testValueYes.key
         )
@@ -105,9 +104,9 @@ struct LocalizableStringsRepositoryTests {
     }
 
     @Test
-    func stringForLocaleFallsBackToSystemElseEnglish() {
+    func stringForLocaleFallsBackToSystemElseEnglish() async {
 
-        let localizedString: String? = stringsRepository.stringForLocaleElseSystemElseEnglish(
+        let localizedString: String? = await stringsRepository.stringForLocaleElseSystemElseEnglish(
             localeIdentifier: LocalizableStringsBundleLoaderTests.missingLocalizableStringsResource,
             key: LocalizableStringsKeys.testValueYes.key
         )
@@ -116,9 +115,9 @@ struct LocalizableStringsRepositoryTests {
     }
 
     @Test
-    func stringForUnsupportedLocaleIsLoadedAndUsesTableName() {
+    func stringForUnsupportedLocaleIsLoadedAndUsesTableName() async {
 
-        let localizedString: String? = stringsRepository.stringForLocale(
+        let localizedString: String? = await stringsRepository.stringForLocale(
             localeIdentifier: "ru-143",
             key: "back"
         )
@@ -127,9 +126,9 @@ struct LocalizableStringsRepositoryTests {
     }
 
     @Test
-    func stringForUnsupportedLocaleFallsBackToBaseLocaleEs() {
+    func stringForUnsupportedLocaleFallsBackToBaseLocaleEs() async {
 
-        let localizedString: String? = stringsRepository.stringForLocale(
+        let localizedString: String? = await stringsRepository.stringForLocale(
             localeIdentifier: "es-143",
             key: "test.value.yes"
         )
@@ -140,19 +139,19 @@ struct LocalizableStringsRepositoryTests {
     // MARK: - System
 
     @Test
-    func stringForSystemReturnsSpanishTranslationWhenSystemIsSpanish() {
+    func stringForSystemReturnsSpanishTranslationWhenSystemIsSpanish() async {
 
         // Expects System to be in Spanish.  Configured in tests.
 
-        #expect(stringsRepository.stringForSystem(key: "test.value.yes") == "Sí")
-        #expect(stringsRepository.stringForSystemElseEnglish(key: "test.value.yes") == "Sí")
+        #expect(await stringsRepository.stringForSystem(key: "test.value.yes") == "Sí")
+        #expect(await stringsRepository.stringForSystemElseEnglish(key: "test.value.yes") == "Sí")
     }
 
     @Test
-    func stringForSystemReturnsEnglishTranslationWhenSystemTranslationDoesNotExist() {
+    func stringForSystemReturnsEnglishTranslationWhenSystemTranslationDoesNotExist() async {
 
         // Expects System to be in Spanish.  Configured in tests.
 
-        #expect(stringsRepository.stringForSystemElseEnglish(key: "test.value.englishOnly") == "English Only")
+        #expect(await stringsRepository.stringForSystemElseEnglish(key: "test.value.englishOnly") == "English Only")
     }
 }
