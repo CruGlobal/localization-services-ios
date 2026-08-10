@@ -34,36 +34,36 @@ struct LocalizableStringsBundlePoolTests {
     // MARK: - Get Strings Bundle
 
     @Test
-    func gettingStringsBundleForExistingLocaleReturnsBundle() {
+    func gettingStringsBundleForExistingLocaleReturnsBundle() async {
 
         let pool: LocalizableStringsBundlePool = getPool()
 
-        #expect(pool.getStringsBundle(localeIdentifier: LocaleId.spanish.id) != nil)
+        #expect(await pool.getStringsBundle(localeIdentifier: LocaleId.spanish.id) != nil)
     }
 
     @Test
-    func gettingStringsBundleForMissingLocaleReturnsNil() {
+    func gettingStringsBundleForMissingLocaleReturnsNil() async {
 
         let pool: LocalizableStringsBundlePool = getPool()
 
-        #expect(pool.getStringsBundle(localeIdentifier: Self.missingLocale) == nil)
+        #expect(await pool.getStringsBundle(localeIdentifier: Self.missingLocale) == nil)
     }
 
     @Test
-    func gettingStringsBundleForEmptyLocaleReturnsNil() {
+    func gettingStringsBundleForEmptyLocaleReturnsNil() async {
 
         let pool: LocalizableStringsBundlePool = getPool()
 
-        #expect(pool.getStringsBundle(localeIdentifier: "") == nil)
+        #expect(await pool.getStringsBundle(localeIdentifier: "") == nil)
     }
 
     @Test
-    func gettingStringsBundleForUnsupportedLocaleReturnsBaseLanguageBundleWithLocaleTable() throws {
+    func gettingStringsBundleForUnsupportedLocaleReturnsBaseLanguageBundleWithLocaleTable() async throws {
 
         let pool: LocalizableStringsBundlePool = getPool()
 
         let stringsBundle: LocalizableStringsBundle = try #require(
-            pool.getStringsBundle(localeIdentifier: LocaleId.russianCentralAsia.id)
+            await pool.getStringsBundle(localeIdentifier: LocaleId.russianCentralAsia.id)
         )
 
         #expect(stringsBundle.table == LocaleId.russianCentralAsia.id)
@@ -73,32 +73,32 @@ struct LocalizableStringsBundlePoolTests {
     // MARK: - Caching
 
     @Test
-    func gettingStringsBundleForSameLocaleReturnsCachedBundleInstance() throws {
+    func gettingStringsBundleForSameLocaleReturnsCachedBundleInstance() async throws {
 
         let pool: LocalizableStringsBundlePool = getPool()
 
         let firstStringsBundle: LocalizableStringsBundle = try #require(
-            pool.getStringsBundle(localeIdentifier: LocaleId.spanish.id)
+            await pool.getStringsBundle(localeIdentifier: LocaleId.spanish.id)
         )
 
         let secondStringsBundle: LocalizableStringsBundle = try #require(
-            pool.getStringsBundle(localeIdentifier: LocaleId.spanish.id)
+            await pool.getStringsBundle(localeIdentifier: LocaleId.spanish.id)
         )
 
         #expect(firstStringsBundle === secondStringsBundle)
     }
 
     @Test
-    func gettingStringsBundleForDifferentLocalesReturnsDifferentBundleInstances() throws {
+    func gettingStringsBundleForDifferentLocalesReturnsDifferentBundleInstances() async throws {
 
         let pool: LocalizableStringsBundlePool = getPool()
 
         let spanishStringsBundle: LocalizableStringsBundle = try #require(
-            pool.getStringsBundle(localeIdentifier: LocaleId.spanish.id)
+            await pool.getStringsBundle(localeIdentifier: LocaleId.spanish.id)
         )
 
         let englishStringsBundle: LocalizableStringsBundle = try #require(
-            pool.getStringsBundle(localeIdentifier: LocaleId.english.id)
+            await pool.getStringsBundle(localeIdentifier: LocaleId.english.id)
         )
 
         #expect(spanishStringsBundle !== englishStringsBundle)
@@ -107,69 +107,69 @@ struct LocalizableStringsBundlePoolTests {
     // MARK: - Add Strings Bundle
 
     @Test
-    func gettingStringsBundleReturnsAddedBundleInstance() throws {
+    func gettingStringsBundleReturnsAddedBundleInstance() async throws {
 
         let pool: LocalizableStringsBundlePool = getPool()
 
         let addedStringsBundle: LocalizableStringsBundle = getTestStringsBundle()
 
-        pool.addStringsBundle(
+        await pool.addStringsBundle(
             localeIdentifier: LocaleId.spanish.id,
             stringsBundle: addedStringsBundle
         )
 
         let stringsBundle: LocalizableStringsBundle = try #require(
-            pool.getStringsBundle(localeIdentifier: LocaleId.spanish.id)
+            await pool.getStringsBundle(localeIdentifier: LocaleId.spanish.id)
         )
 
         #expect(stringsBundle === addedStringsBundle)
     }
 
     @Test
-    func gettingStringsBundleReturnsAddedBundleForLocaleThatCanNotBeLoaded() throws {
+    func gettingStringsBundleReturnsAddedBundleForLocaleThatCanNotBeLoaded() async throws {
 
         let pool: LocalizableStringsBundlePool = getPool()
 
         let addedStringsBundle: LocalizableStringsBundle = getTestStringsBundle()
 
-        pool.addStringsBundle(
+        await pool.addStringsBundle(
             localeIdentifier: Self.missingLocale,
             stringsBundle: addedStringsBundle
         )
 
         let stringsBundle: LocalizableStringsBundle = try #require(
-            pool.getStringsBundle(localeIdentifier: Self.missingLocale)
+            await pool.getStringsBundle(localeIdentifier: Self.missingLocale)
         )
 
         #expect(stringsBundle === addedStringsBundle)
     }
 
     @Test
-    func addingNilStringsBundleForExistingLocaleReturnsNilWithoutLoadingBundle() {
+    func addingNilStringsBundleForExistingLocaleReturnsNilWithoutLoadingBundle() async {
 
         let pool: LocalizableStringsBundlePool = getPool()
 
-        pool.addStringsBundle(
+        await pool.addStringsBundle(
             localeIdentifier: LocaleId.spanish.id,
             stringsBundle: nil
         )
 
-        #expect(pool.getStringsBundle(localeIdentifier: LocaleId.spanish.id) == nil)
+        #expect(await pool.getStringsBundle(localeIdentifier: LocaleId.spanish.id) == nil)
     }
 
     @Test
-    func addingStringsBundleForSameLocaleReturnsMostRecentlyAddedBundle() throws {
+    func addingStringsBundleForSameLocaleReturnsMostRecentlyAddedBundle() async throws {
 
         let pool: LocalizableStringsBundlePool = getPool()
 
         let firstStringsBundle: LocalizableStringsBundle = getTestStringsBundle()
         let secondStringsBundle: LocalizableStringsBundle = getTestStringsBundle()
 
-        pool.addStringsBundle(localeIdentifier: LocaleId.spanish.id, stringsBundle: firstStringsBundle)
-        pool.addStringsBundle(localeIdentifier: LocaleId.spanish.id, stringsBundle: secondStringsBundle)
+        await pool.addStringsBundle(localeIdentifier: LocaleId.spanish.id, stringsBundle: firstStringsBundle)
+        await pool.addStringsBundle(localeIdentifier: LocaleId.spanish.id, stringsBundle: secondStringsBundle)
 
         let stringsBundle: LocalizableStringsBundle = try #require(
-            pool.getStringsBundle(localeIdentifier: LocaleId.spanish.id)
+            await pool.getStringsBundle(localeIdentifier: LocaleId.spanish.id)
         )
 
         #expect(stringsBundle === secondStringsBundle)
@@ -178,43 +178,43 @@ struct LocalizableStringsBundlePoolTests {
     // MARK: - Max Size
 
     @Test
-    func stringsBundleIsRetainedWhenMaxSizeIsNotExceeded() throws {
+    func stringsBundleIsRetainedWhenMaxSizeIsNotExceeded() async throws {
 
         let pool: LocalizableStringsBundlePool = getPool(maxSize: 3)
 
         let addedStringsBundle: LocalizableStringsBundle = getTestStringsBundle()
 
-        pool.addStringsBundle(localeIdentifier: LocaleId.spanish.id, stringsBundle: addedStringsBundle)
-        pool.addStringsBundle(localeIdentifier: "locale.1", stringsBundle: getTestStringsBundle())
-        pool.addStringsBundle(localeIdentifier: "locale.2", stringsBundle: getTestStringsBundle())
+        await pool.addStringsBundle(localeIdentifier: LocaleId.spanish.id, stringsBundle: addedStringsBundle)
+        await pool.addStringsBundle(localeIdentifier: "locale.1", stringsBundle: getTestStringsBundle())
+        await pool.addStringsBundle(localeIdentifier: "locale.2", stringsBundle: getTestStringsBundle())
 
         let stringsBundle: LocalizableStringsBundle = try #require(
-            pool.getStringsBundle(localeIdentifier: LocaleId.spanish.id)
+            await pool.getStringsBundle(localeIdentifier: LocaleId.spanish.id)
         )
 
         #expect(stringsBundle === addedStringsBundle)
     }
 
     @Test
-    func oldestStringsBundleIsRemovedWhenMaxSizeIsExceeded() throws {
+    func oldestStringsBundleIsRemovedWhenMaxSizeIsExceeded() async throws {
 
         let pool: LocalizableStringsBundlePool = getPool(maxSize: 2)
 
         let addedStringsBundle: LocalizableStringsBundle = getTestStringsBundle()
 
-        pool.addStringsBundle(localeIdentifier: LocaleId.spanish.id, stringsBundle: addedStringsBundle)
-        pool.addStringsBundle(localeIdentifier: "locale.1", stringsBundle: getTestStringsBundle())
-        pool.addStringsBundle(localeIdentifier: "locale.2", stringsBundle: getTestStringsBundle())
+        await pool.addStringsBundle(localeIdentifier: LocaleId.spanish.id, stringsBundle: addedStringsBundle)
+        await pool.addStringsBundle(localeIdentifier: "locale.1", stringsBundle: getTestStringsBundle())
+        await pool.addStringsBundle(localeIdentifier: "locale.2", stringsBundle: getTestStringsBundle())
 
         let stringsBundle: LocalizableStringsBundle = try #require(
-            pool.getStringsBundle(localeIdentifier: LocaleId.spanish.id)
+            await pool.getStringsBundle(localeIdentifier: LocaleId.spanish.id)
         )
 
         #expect(stringsBundle !== addedStringsBundle, "Expected the oldest pool object to be removed and the strings bundle to be reloaded.")
     }
 
     @Test
-    func mostRecentlyAddedStringsBundlesAreRetainedWhenMaxSizeIsExceeded() throws {
+    func mostRecentlyAddedStringsBundlesAreRetainedWhenMaxSizeIsExceeded() async throws {
 
         let pool: LocalizableStringsBundlePool = getPool(maxSize: 2)
 
@@ -222,15 +222,15 @@ struct LocalizableStringsBundlePoolTests {
         let secondStringsBundle: LocalizableStringsBundle = getTestStringsBundle()
         let thirdStringsBundle: LocalizableStringsBundle = getTestStringsBundle()
 
-        pool.addStringsBundle(localeIdentifier: "locale.1", stringsBundle: firstStringsBundle)
-        pool.addStringsBundle(localeIdentifier: "locale.2", stringsBundle: secondStringsBundle)
-        pool.addStringsBundle(localeIdentifier: "locale.3", stringsBundle: thirdStringsBundle)
+        await pool.addStringsBundle(localeIdentifier: "locale.1", stringsBundle: firstStringsBundle)
+        await pool.addStringsBundle(localeIdentifier: "locale.2", stringsBundle: secondStringsBundle)
+        await pool.addStringsBundle(localeIdentifier: "locale.3", stringsBundle: thirdStringsBundle)
 
-        let thirdPooledStringsBundle: LocalizableStringsBundle = try #require(pool.getStringsBundle(localeIdentifier: "locale.3"))
-        let secondPooledStringsBundle: LocalizableStringsBundle = try #require(pool.getStringsBundle(localeIdentifier: "locale.2"))
+        let thirdPooledStringsBundle: LocalizableStringsBundle = try #require(await pool.getStringsBundle(localeIdentifier: "locale.3"))
+        let secondPooledStringsBundle: LocalizableStringsBundle = try #require(await pool.getStringsBundle(localeIdentifier: "locale.2"))
 
         #expect(thirdPooledStringsBundle === thirdStringsBundle)
         #expect(secondPooledStringsBundle === secondStringsBundle)
-        #expect(pool.getStringsBundle(localeIdentifier: "locale.1") == nil)
+        #expect(await pool.getStringsBundle(localeIdentifier: "locale.1") == nil)
     }
 }
