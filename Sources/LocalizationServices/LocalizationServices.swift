@@ -209,7 +209,7 @@ public actor LocalizationServices: Sendable {
         return nil
     }
     
-    nonisolated public func stringForSystemElseEnglishAsync(key: String) -> String? {
+    nonisolated public func stringForSystemElseEnglish(key: String) -> String? {
         
         if let systemString = stringForSystem(key: key) {
             
@@ -253,5 +253,25 @@ public actor LocalizationServices: Sendable {
     nonisolated public func stringForLocaleElseEnglishElseKey(localeIdentifier: String, key: String) -> String {
 
         return stringForLocaleElseEnglish(localeIdentifier: localeIdentifier, key: key) ?? key
+    }
+
+    public func stringForLocaleElseSystemElseEnglishElseKeyAsync(localeIdentifier: String, key: String) async -> String {
+
+        return await stringForLocaleElseSystemElseEnglishAsync(localeIdentifier: localeIdentifier, key: key) ?? key
+    }
+
+    nonisolated public func stringForLocaleElseSystemElseEnglishElseKey(localeIdentifier: String, key: String) -> String {
+
+        return stringForLocaleElseSystemElseEnglish(localeIdentifier: localeIdentifier, key: key) ?? key
+    }
+
+    public func stringForSystemElseEnglishElseKeyAsync(key: String) async -> String {
+
+        return await stringForSystemElseEnglishAsync(key: key) ?? key
+    }
+
+    nonisolated public func stringForSystemElseEnglishElseKey(key: String) -> String {
+
+        return stringForSystemElseEnglish(key: key) ?? key
     }
 }

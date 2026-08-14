@@ -260,7 +260,7 @@ struct LocalizationServicesTests {
 
         // Expects System to be in Spanish.  Configured in tests.
 
-        #expect(localizationServices.stringForSystemElseEnglishAsync(key: LocalizableStringsKeys.testValueYes.key) == "Sí")
+        #expect(localizationServices.stringForSystemElseEnglish(key: LocalizableStringsKeys.testValueYes.key) == "Sí")
     }
 
     @Test
@@ -272,7 +272,7 @@ struct LocalizationServicesTests {
     @Test
     func stringForSystemElseEnglishFallsBackToEnglishWhenSystemStringDoesNotExist() {
 
-        #expect(localizationServices.stringForSystemElseEnglishAsync(key: Self.englishOnlyKey) == "English Only")
+        #expect(localizationServices.stringForSystemElseEnglish(key: Self.englishOnlyKey) == "English Only")
     }
 
     // MARK: - Key Fallback
@@ -361,5 +361,81 @@ struct LocalizationServicesTests {
     func stringForLocaleElseEnglishElseKeyReturnsKeyWhenLocaleAndEnglishStringsDoNotExist() {
 
         #expect(localizationServices.stringForLocaleElseEnglishElseKey(localeIdentifier: Self.missingLocale, key: Self.missingKey) == Self.missingKey)
+    }
+
+    @Test
+    func stringForLocaleElseSystemElseEnglishElseKeyAsyncReturnsLocaleString() async {
+
+        #expect(await localizationServices.stringForLocaleElseSystemElseEnglishElseKeyAsync(localeIdentifier: LocaleId.spanish.id, key: LocalizableStringsKeys.testValueYes.key) == "Sí")
+    }
+
+    @Test
+    func stringForLocaleElseSystemElseEnglishElseKeyReturnsLocaleString() {
+
+        #expect(localizationServices.stringForLocaleElseSystemElseEnglishElseKey(localeIdentifier: LocaleId.spanish.id, key: LocalizableStringsKeys.testValueYes.key) == "Sí")
+    }
+
+    @Test
+    func stringForLocaleElseSystemElseEnglishElseKeyAsyncFallsBackToEnglishWhenLocaleAndSystemStringsDoNotExist() async {
+
+        #expect(await localizationServices.stringForLocaleElseSystemElseEnglishElseKeyAsync(localeIdentifier: Self.missingLocale, key: Self.englishOnlyKey) == "English Only")
+    }
+
+    @Test
+    func stringForLocaleElseSystemElseEnglishElseKeyFallsBackToEnglishWhenLocaleAndSystemStringsDoNotExist() {
+
+        #expect(localizationServices.stringForLocaleElseSystemElseEnglishElseKey(localeIdentifier: Self.missingLocale, key: Self.englishOnlyKey) == "English Only")
+    }
+
+    @Test
+    func stringForLocaleElseSystemElseEnglishElseKeyAsyncReturnsKeyWhenNoStringsExist() async {
+
+        #expect(await localizationServices.stringForLocaleElseSystemElseEnglishElseKeyAsync(localeIdentifier: Self.missingLocale, key: Self.missingKey) == Self.missingKey)
+    }
+
+    @Test
+    func stringForLocaleElseSystemElseEnglishElseKeyReturnsKeyWhenNoStringsExist() {
+
+        #expect(localizationServices.stringForLocaleElseSystemElseEnglishElseKey(localeIdentifier: Self.missingLocale, key: Self.missingKey) == Self.missingKey)
+    }
+
+    @Test
+    func stringForSystemElseEnglishElseKeyAsyncReturnsSystemString() async {
+
+        // Expects System to be in Spanish.  Configured in tests.
+
+        #expect(await localizationServices.stringForSystemElseEnglishElseKeyAsync(key: LocalizableStringsKeys.testValueYes.key) == "Sí")
+    }
+
+    @Test
+    func stringForSystemElseEnglishElseKeyReturnsSystemString() {
+
+        // Expects System to be in Spanish.  Configured in tests.
+
+        #expect(localizationServices.stringForSystemElseEnglishElseKey(key: LocalizableStringsKeys.testValueYes.key) == "Sí")
+    }
+
+    @Test
+    func stringForSystemElseEnglishElseKeyAsyncFallsBackToEnglishWhenSystemStringDoesNotExist() async {
+
+        #expect(await localizationServices.stringForSystemElseEnglishElseKeyAsync(key: Self.englishOnlyKey) == "English Only")
+    }
+
+    @Test
+    func stringForSystemElseEnglishElseKeyFallsBackToEnglishWhenSystemStringDoesNotExist() {
+
+        #expect(localizationServices.stringForSystemElseEnglishElseKey(key: Self.englishOnlyKey) == "English Only")
+    }
+
+    @Test
+    func stringForSystemElseEnglishElseKeyAsyncReturnsKeyWhenNoStringsExist() async {
+
+        #expect(await localizationServices.stringForSystemElseEnglishElseKeyAsync(key: Self.missingKey) == Self.missingKey)
+    }
+
+    @Test
+    func stringForSystemElseEnglishElseKeyReturnsKeyWhenNoStringsExist() {
+
+        #expect(localizationServices.stringForSystemElseEnglishElseKey(key: Self.missingKey) == Self.missingKey)
     }
 }
