@@ -30,6 +30,19 @@ public actor LocalizationServices: Sendable {
         self.bundleLoader = bundleLoader
     }
     
+    nonisolated private func getLocaleStringsBundle(localeIdentifier: String) -> LocaleLocalizableStringsBundle? {
+        
+        return LocaleLocalizableStringsBundle(
+            localeIdentifier: localeIdentifier,
+            localeBundleLoader: bundleLoader
+        )
+    }
+    
+    nonisolated public func getStringsBundle(localeIdentifier: String) -> LocalizableStringsBundle? {
+        
+        return getLocaleStringsBundle(localeIdentifier: localeIdentifier)?.localizableStringsBundle
+    }
+    
     // MARK: - English
     
     public func stringForEnglishAsync(key: String) async -> String? {
@@ -44,17 +57,14 @@ public actor LocalizationServices: Sendable {
     }
     
     nonisolated public func stringForEnglish(key: String) -> String? {
-        
-        let stringsBundle = LocaleLocalizableStringsBundle(
-            localeIdentifier: Self.englishStringsBundle,
-            localeBundleLoader: bundleLoader
-        )
-        
+
+        let stringsBundle = getStringsBundle(localeIdentifier: Self.englishStringsBundle)
+
         guard let stringsBundle = stringsBundle else {
             return nil
         }
-        
-        return stringsBundle.localizableStringsBundle.stringForKey(key: key)
+
+        return stringsBundle.stringForKey(key: key)
     }
     
     // MARK: - Locale
@@ -80,16 +90,13 @@ public actor LocalizationServices: Sendable {
             return nil
         }
 
-        let stringsBundle = LocaleLocalizableStringsBundle(
-            localeIdentifier: localeIdentifier,
-            localeBundleLoader: bundleLoader
-        )
+        let stringsBundle = getStringsBundle(localeIdentifier: localeIdentifier)
 
         guard let stringsBundle = stringsBundle else {
             return nil
         }
 
-        return stringsBundle.localizableStringsBundle.stringForKey(key: key)
+        return stringsBundle.stringForKey(key: key)
     }
 
     public func stringForLocaleElseEnglishAsync(localeIdentifier: String, key: String) async -> String? {
@@ -183,16 +190,13 @@ public actor LocalizationServices: Sendable {
     
     nonisolated public func stringForSystem(key: String) -> String? {
         
-        let stringsBundle = LocaleLocalizableStringsBundle(
-            localeIdentifier: getSystemLocaleIdentifier(),
-            localeBundleLoader: bundleLoader
-        )
-        
+        let stringsBundle = getStringsBundle(localeIdentifier: getSystemLocaleIdentifier())
+
         guard let stringsBundle = stringsBundle else {
             return nil
         }
-        
-        return stringsBundle.localizableStringsBundle.stringForKey(key: key)
+
+        return stringsBundle.stringForKey(key: key)
     }
     
     public func stringForSystemElseEnglishAsync(key: String) async -> String? {
