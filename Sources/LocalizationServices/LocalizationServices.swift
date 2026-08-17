@@ -58,13 +58,13 @@ public final class LocalizationServices: Sendable {
         keys: [String],
         shouldFallbackToKey: Bool? = nil,
         fetchOrder: [StringLocation]? = nil
-    ) -> [String: String]? {
+    ) -> [String: String] {
         
         let stringLocationOrder = fetchOrder ?? config.fetchStringsInOrder
         let shouldFallbackToKey: Bool = shouldFallbackToKey ?? config.shouldFallbackToKeyIfNoString
         
         guard !stringLocationOrder.isEmpty else {
-            return nil
+            return Dictionary()
         }
         
         var stringBundles: [String: LocalizableStringsBundle] = Dictionary()
