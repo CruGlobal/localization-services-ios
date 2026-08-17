@@ -25,6 +25,14 @@ struct LocalizableStringsBundleLoaderTests {
     )
 
     @Test
+    func systemLocaleIdentifierIsSpanishWhenSystemIsSpanish() {
+
+        // Expects System to be in Spanish.  Configured in tests.
+
+        #expect(bundleLoaderUsingBaseInternationalization.systemLocaleIdentifier == LocaleId.spanish.id)
+    }
+
+    @Test
     func loadingBaseLocalizableStringsExistsWhenUsingBaseInternationalization() {
 
         #expect(bundleLoaderUsingBaseInternationalization.bundleForResource(bundleFilename: BaseInternationalization.baseBundleFilename) != nil, "Failed to load Base localizable strings.")

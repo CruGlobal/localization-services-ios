@@ -35,6 +35,16 @@ public final class LocalizableStringsBundleLoader: Sendable {
         }
     }
     
+    public var systemLocaleIdentifier: String {
+                
+        let preferredLocalizations: [String] = Bundle.preferredLocalizations(
+            from: localizableStringsFilesBundle.localizations,
+            forPreferences: Locale.preferredLanguages
+        )
+        
+        return preferredLocalizations.first ?? Locale.current.identifier
+    }
+    
     public func getEnglishBundle() -> LocalizableStringsBundle? {
         
         var bundleFilenames: [String] = Self.possibleEnglishBundleFilenames

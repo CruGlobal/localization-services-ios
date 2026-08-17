@@ -33,6 +33,10 @@ actor LocalizableStringsBundlePool {
     
     func getStringsBundle(localeIdentifier: String) -> LocalizableStringsBundle? {
         
+        guard !localeIdentifier.isEmpty else {
+            return nil
+        }
+        
         if let object = pool.first(where: { $0.localeIdentifier == localeIdentifier }) {
             return object.stringsBundle
         }
