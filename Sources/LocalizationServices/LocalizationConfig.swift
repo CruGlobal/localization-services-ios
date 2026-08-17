@@ -1,5 +1,5 @@
 //
-//  Config.swift
+//  LocalizationConfig.swift
 //  LocalizationServices
 //
 //  Created by Levi Eggert on 8/15/26.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Config: Sendable {
+public struct LocalizationConfig: Sendable {
     
     public static let defaultFetchOrder: [StringLocation] = [.english]
     public static let defaultShouldFallbackToKey: Bool = false

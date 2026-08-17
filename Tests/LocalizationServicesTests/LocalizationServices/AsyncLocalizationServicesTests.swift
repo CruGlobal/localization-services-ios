@@ -17,7 +17,7 @@ struct AsyncLocalizationServicesTests {
     private static let englishOnlyKey: String = "test.value.englishOnly"
 
     private let localizationServices: AsyncLocalizationServices = AsyncLocalizationServices(
-        config: Config(
+        config: LocalizationConfig(
             localizableStringsFilesBundle: Bundle.getTestBundle(),
             isUsingBaseInternationalization: true
         )
@@ -26,7 +26,7 @@ struct AsyncLocalizationServicesTests {
     private static func getLocalizationServices(fetchStringsInOrder: [StringLocation], shouldFallbackToKeyIfNoString: Bool? = nil) -> AsyncLocalizationServices {
 
         return AsyncLocalizationServices(
-            config: Config(
+            config: LocalizationConfig(
                 localizableStringsFilesBundle: Bundle.getTestBundle(),
                 isUsingBaseInternationalization: true,
                 fetchStringsInOrder: fetchStringsInOrder,
