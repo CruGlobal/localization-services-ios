@@ -38,19 +38,19 @@ struct LocalizationServicesTests {
     // MARK: - Strings By Location
 
     @Test
-    func stringsForKeysReturnsNilWhenFetchStringsInOrderIsEmpty() {
+    func stringsForKeysReturnsEmptyDictionaryWhenFetchStringsInOrderIsEmpty() {
 
         let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [])
 
-        #expect(localizationServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key]) == nil)
+        #expect(localizationServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key]) == [:])
     }
 
     @Test
-    func stringsForKeysReturnsNilWhenFetchOrderIsEmpty() {
+    func stringsForKeysReturnsEmptyDictionaryWhenFetchOrderIsEmpty() {
 
         let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.english])
 
-        #expect(localizationServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key], fetchOrder: []) == nil)
+        #expect(localizationServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key], fetchOrder: []) == [:])
     }
 
     @Test

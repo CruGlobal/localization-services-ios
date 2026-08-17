@@ -51,13 +51,13 @@ public actor AsyncLocalizationServices {
         keys: [String],
         shouldFallbackToKey: Bool? = nil,
         fetchOrder: [StringLocation]? = nil
-    ) async -> [String: String]? {
+    ) async -> [String: String] {
 
         let stringLocationOrder = fetchOrder ?? config.fetchStringsInOrder
         let shouldFallbackToKey: Bool = shouldFallbackToKey ?? config.shouldFallbackToKeyIfNoString
 
         guard !stringLocationOrder.isEmpty else {
-            return nil
+            return Dictionary()
         }
 
         var stringBundles: [String: LocalizableStringsBundle] = Dictionary()
