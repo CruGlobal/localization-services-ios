@@ -12,10 +12,10 @@ public final class LocalizationServices: Sendable {
     
     private static let englishStringsBundle: String = "en"
                 
-    public let config: Config
+    public let config: LocalizationConfig
     public let bundleLoader: LocalizableStringsBundleLoader
     
-    public init(config: Config) {
+    public init(config: LocalizationConfig) {
         
         let bundleLoader = LocalizableStringsBundleLoader(
             localizableStringsFilesBundle: config.localizableStringsFilesBundle,

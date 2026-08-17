@@ -1,5 +1,5 @@
 //
-//  ConfigTests.swift
+//  LocalizationConfigTests.swift
 //  LocalizationServices
 //
 //  Created by Levi Eggert on 8/15/26.
@@ -9,32 +9,32 @@ import Foundation
 import Testing
 @testable import LocalizationServices
 
-struct ConfigTests {
+struct LocalizationConfigTests {
 
     @Test
     func configUsesDefaultsWhenNotProvided() {
 
-        let config = Config(
+        let config = LocalizationConfig(
             localizableStringsFilesBundle: Bundle.getTestBundle(),
             isUsingBaseInternationalization: true
         )
 
-        #expect(config.fetchStringsInOrder.map { $0.id } == Config.defaultFetchOrder.map { $0.id })
-        #expect(config.shouldFallbackToKeyIfNoString == Config.defaultShouldFallbackToKey)
+        #expect(config.fetchStringsInOrder.map { $0.id } == LocalizationConfig.defaultFetchOrder.map { $0.id })
+        #expect(config.shouldFallbackToKeyIfNoString == LocalizationConfig.defaultShouldFallbackToKey)
     }
 
     @Test
     func configUsesDefaultsWhenProvidedValuesAreNil() {
 
-        let config = Config(
+        let config = LocalizationConfig(
             localizableStringsFilesBundle: Bundle.getTestBundle(),
             isUsingBaseInternationalization: true,
             fetchStringsInOrder: nil,
             shouldFallbackToKeyIfNoString: nil
         )
 
-        #expect(config.fetchStringsInOrder.map { $0.id } == Config.defaultFetchOrder.map { $0.id })
-        #expect(config.shouldFallbackToKeyIfNoString == Config.defaultShouldFallbackToKey)
+        #expect(config.fetchStringsInOrder.map { $0.id } == LocalizationConfig.defaultFetchOrder.map { $0.id })
+        #expect(config.shouldFallbackToKeyIfNoString == LocalizationConfig.defaultShouldFallbackToKey)
     }
 
     @Test
@@ -42,7 +42,7 @@ struct ConfigTests {
 
         let bundle: Bundle = Bundle.getTestBundle()
 
-        let config = Config(
+        let config = LocalizationConfig(
             localizableStringsFilesBundle: bundle,
             isUsingBaseInternationalization: false,
             fetchStringsInOrder: [.locale(identifier: LocaleId.spanish.id), .system, .english],
@@ -58,7 +58,7 @@ struct ConfigTests {
     @Test
     func localizationServicesExposesConfig() async {
 
-        let config = Config(
+        let config = LocalizationConfig(
             localizableStringsFilesBundle: Bundle.getTestBundle(),
             isUsingBaseInternationalization: true,
             fetchStringsInOrder: [.locale(identifier: LocaleId.spanish.id)],
@@ -77,7 +77,7 @@ struct ConfigTests {
     @Test
     func localizationServicesUsesDefaultFetchOrderWhenNotProvided() async {
 
-        let config = Config(
+        let config = LocalizationConfig(
             localizableStringsFilesBundle: Bundle.getTestBundle(),
             isUsingBaseInternationalization: true
         )
