@@ -49,14 +49,11 @@ public actor AsyncLocalizationServices {
     
     public func stringsForKeys(
         keys: [String],
-        shouldFallbackToKey: Bool? = nil,
-        fetchOrder: [StringLocation]? = nil
+        fetchOrder: [StringLocation],
+        shouldFallbackToKey: Bool
     ) async -> [String: String] {
 
-        let stringLocationOrder = fetchOrder ?? config.fetchStringsInOrder
-        let shouldFallbackToKey: Bool = shouldFallbackToKey ?? config.shouldFallbackToKeyIfNoString
-
-        guard !stringLocationOrder.isEmpty else {
+        guard !fetchOrder.isEmpty else {
             return Dictionary()
         }
 
@@ -65,10 +62,10 @@ public actor AsyncLocalizationServices {
 
         for key in keys {
 
-            for index in 0 ..< stringLocationOrder.count {
+            for index in 0 ..< fetchOrder.count {
 
-                let stringLocation: StringLocation = stringLocationOrder[index]
-                let reachedEnd: Bool = index == stringLocationOrder.count - 1
+                let stringLocation: StringLocation = fetchOrder[index]
+                let reachedEnd: Bool = index == fetchOrder.count - 1
 
                 let id: String = stringLocation.id
 
@@ -93,18 +90,15 @@ public actor AsyncLocalizationServices {
     
     public func stringForKey(
         key: String,
-        shouldFallbackToKey: Bool? = nil,
-        fetchOrder: [StringLocation]? = nil
+        fetchOrder: [StringLocation],
+        shouldFallbackToKey: Bool
     ) async -> String? {
 
-        let stringLocationOrder = fetchOrder ?? config.fetchStringsInOrder
-        let shouldFallbackToKey: Bool = shouldFallbackToKey ?? config.shouldFallbackToKeyIfNoString
-        
-        guard !stringLocationOrder.isEmpty else {
+        guard !fetchOrder.isEmpty else {
             return nil
         }
 
-        for stringLocation in stringLocationOrder {
+        for stringLocation in fetchOrder {
 
             let stringsBundle: LocalizableStringsBundle? = await getStringsBundle(stringLocation: stringLocation)
 
@@ -118,7 +112,7 @@ public actor AsyncLocalizationServices {
         if shouldFallbackToKey {
             return key
         }
-        
+
         return nil
     }
 

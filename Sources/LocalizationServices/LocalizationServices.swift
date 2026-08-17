@@ -56,33 +56,30 @@ public final class LocalizationServices: Sendable {
 
     public func stringsForKeys(
         keys: [String],
-        shouldFallbackToKey: Bool? = nil,
-        fetchOrder: [StringLocation]? = nil
+        fetchOrder: [StringLocation],
+        shouldFallbackToKey: Bool
     ) -> [String: String] {
-        
-        let stringLocationOrder = fetchOrder ?? config.fetchStringsInOrder
-        let shouldFallbackToKey: Bool = shouldFallbackToKey ?? config.shouldFallbackToKeyIfNoString
-        
-        guard !stringLocationOrder.isEmpty else {
+
+        guard !fetchOrder.isEmpty else {
             return Dictionary()
         }
-        
+
         var stringBundles: [String: LocalizableStringsBundle] = Dictionary()
         var strings: [String: String] = Dictionary()
-        
+
         for key in keys {
-            
-            for index in 0 ..< stringLocationOrder.count {
-                
-                let stringLocation: StringLocation = stringLocationOrder[index]
-                let reachedEnd: Bool = index == stringLocationOrder.count - 1
-                
+
+            for index in 0 ..< fetchOrder.count {
+
+                let stringLocation: StringLocation = fetchOrder[index]
+                let reachedEnd: Bool = index == fetchOrder.count - 1
+
                 let id: String = stringLocation.id
-                
+
                 if stringBundles[id] == nil {
                     stringBundles[id] = getStringsBundle(stringLocation: stringLocation)
                 }
-                
+
                 if let string = stringBundles[id]?.stringForKey(key: key) {
                     strings[key] = string
                     break
@@ -92,7 +89,7 @@ public final class LocalizationServices: Sendable {
                 }
             }
         }
-        
+
         return strings
     }
     
@@ -100,32 +97,29 @@ public final class LocalizationServices: Sendable {
 
     public func stringForKey(
         key: String,
-        shouldFallbackToKey: Bool? = nil,
-        fetchOrder: [StringLocation]? = nil
+        fetchOrder: [StringLocation],
+        shouldFallbackToKey: Bool
     ) -> String? {
-        
-        let stringLocationOrder = fetchOrder ?? config.fetchStringsInOrder
-        let shouldFallbackToKey: Bool = shouldFallbackToKey ?? config.shouldFallbackToKeyIfNoString
-        
-        guard !stringLocationOrder.isEmpty else {
+
+        guard !fetchOrder.isEmpty else {
             return nil
         }
-        
-        for stringLocation in stringLocationOrder {
-            
+
+        for stringLocation in fetchOrder {
+
             let stringsBundle: LocalizableStringsBundle? = getStringsBundle(stringLocation: stringLocation)
-            
+
             guard let string = stringsBundle?.stringForKey(key: key) else {
                 continue
             }
-            
+
             return string
         }
-        
+
         if shouldFallbackToKey {
             return key
         }
-        
+
         return nil
     }
     

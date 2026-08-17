@@ -23,50 +23,24 @@ struct AsyncLocalizationServicesTests {
         )
     )
 
-    private static func getLocalizationServices(fetchStringsInOrder: [StringLocation], shouldFallbackToKeyIfNoString: Bool? = nil) -> AsyncLocalizationServices {
-
-        return AsyncLocalizationServices(
-            config: LocalizationConfig(
-                localizableStringsFilesBundle: Bundle.getTestBundle(),
-                isUsingBaseInternationalization: true,
-                fetchStringsInOrder: fetchStringsInOrder,
-                shouldFallbackToKeyIfNoString: shouldFallbackToKeyIfNoString
-            )
-        )
-    }
-
     // MARK: - Strings By Location
-
-    @Test
-    func stringsForKeysReturnsEmptyDictionaryWhenFetchStringsInOrderIsEmpty() async {
-
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [])
-
-        #expect(await localizationServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key]) == [:])
-    }
 
     @Test
     func stringsForKeysReturnsEmptyDictionaryWhenFetchOrderIsEmpty() async {
 
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.english])
-
-        #expect(await localizationServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key], fetchOrder: []) == [:])
+        #expect(await localizationServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key], fetchOrder: [], shouldFallbackToKey: false) == [:])
     }
 
     @Test
     func stringsForKeysReturnsEmptyDictionaryWhenKeysAreEmpty() async {
 
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.english])
-
-        #expect(await localizationServices.stringsForKeys(keys: []) == [:])
+        #expect(await localizationServices.stringsForKeys(keys: [], fetchOrder: [.english], shouldFallbackToKey: false) == [:])
     }
 
     @Test
     func stringsForKeysReturnsStringForEveryKey() async {
 
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.english])
-
-        let strings = await localizationServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key, Self.englishOnlyKey])
+        let strings = await localizationServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key, Self.englishOnlyKey], fetchOrder: [.english], shouldFallbackToKey: false)
 
         #expect(strings == [LocalizableStringsKeys.testValueYes.key: "yes", Self.englishOnlyKey: "English Only"])
     }
@@ -74,90 +48,22 @@ struct AsyncLocalizationServicesTests {
     @Test
     func stringsForKeysReturnsStringFromFirstLocationThatHasIt() async {
 
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [])
-
-        #expect(await localizationServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key], fetchOrder: [.locale(identifier: LocaleId.spanish.id), .english]) == [LocalizableStringsKeys.testValueYes.key: "Sí"])
-        #expect(await localizationServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key], fetchOrder: [.english, .locale(identifier: LocaleId.spanish.id)]) == [LocalizableStringsKeys.testValueYes.key: "yes"])
+        #expect(await localizationServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key], fetchOrder: [.locale(identifier: LocaleId.spanish.id), .english], shouldFallbackToKey: false) == [LocalizableStringsKeys.testValueYes.key: "Sí"])
+        #expect(await localizationServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key], fetchOrder: [.english, .locale(identifier: LocaleId.spanish.id)], shouldFallbackToKey: false) == [LocalizableStringsKeys.testValueYes.key: "yes"])
     }
 
     @Test
     func stringsForKeysFallsBackToNextLocationPerKey() async {
 
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.locale(identifier: LocaleId.spanish.id), .english])
-
-        let strings = await localizationServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key, Self.englishOnlyKey])
+        let strings = await localizationServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key, Self.englishOnlyKey], fetchOrder: [.locale(identifier: LocaleId.spanish.id), .english], shouldFallbackToKey: false)
 
         #expect(strings == [LocalizableStringsKeys.testValueYes.key: "Sí", Self.englishOnlyKey: "English Only"])
     }
 
     @Test
-    func stringsForKeysOmitsKeysWithoutStringsWhenUsingDefaultConfig() async {
+    func stringsForKeysOmitsKeysWithoutStringsWhenNotFallingBackToKey() async {
 
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.locale(identifier: LocaleId.spanish.id), .english])
-
-        let strings = await localizationServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key, Self.missingKey])
-
-        #expect(strings == [LocalizableStringsKeys.testValueYes.key: "Sí"])
-    }
-
-    @Test
-    func stringsForKeysFallsBackToKeyWhenStringDoesNotExist() async {
-
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.locale(identifier: LocaleId.spanish.id), .english])
-
-        let strings = await localizationServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key, Self.missingKey], shouldFallbackToKey: true)
-
-        #expect(strings == [LocalizableStringsKeys.testValueYes.key: "Sí", Self.missingKey: Self.missingKey])
-    }
-
-    @Test
-    func stringsForKeysFallsBackToKeyWhenConfigFallsBackToKey() async {
-
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.locale(identifier: LocaleId.spanish.id), .english], shouldFallbackToKeyIfNoString: true)
-
-        let strings = await localizationServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key, Self.missingKey])
-
-        #expect(strings == [LocalizableStringsKeys.testValueYes.key: "Sí", Self.missingKey: Self.missingKey])
-    }
-
-    @Test
-    func stringsForKeysOmitsKeysWithoutStringsWhenConfigDoesNotFallBackToKey() async {
-
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.locale(identifier: LocaleId.spanish.id), .english], shouldFallbackToKeyIfNoString: false)
-
-        let strings = await localizationServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key, Self.missingKey])
-
-        #expect(strings == [LocalizableStringsKeys.testValueYes.key: "Sí"])
-    }
-
-    @Test
-    func stringsForKeysShouldFallbackToKeyOverridesConfig() async {
-
-        let fallsBackToKeyServices = Self.getLocalizationServices(fetchStringsInOrder: [.locale(identifier: LocaleId.spanish.id), .english], shouldFallbackToKeyIfNoString: true)
-
-        #expect(await fallsBackToKeyServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key, Self.missingKey], shouldFallbackToKey: false) == [LocalizableStringsKeys.testValueYes.key: "Sí"])
-
-        let doesNotFallBackToKeyServices = Self.getLocalizationServices(fetchStringsInOrder: [.locale(identifier: LocaleId.spanish.id), .english], shouldFallbackToKeyIfNoString: false)
-
-        #expect(await doesNotFallBackToKeyServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key, Self.missingKey], shouldFallbackToKey: true) == [LocalizableStringsKeys.testValueYes.key: "Sí", Self.missingKey: Self.missingKey])
-    }
-
-    @Test
-    func stringsForKeysFallingBackToKeyFromConfigDoesNotReplaceStringFoundAtEarlierLocation() async {
-
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.locale(identifier: LocaleId.spanish.id), .locale(identifier: Self.missingLocale)], shouldFallbackToKeyIfNoString: true)
-
-        let strings = await localizationServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key])
-
-        #expect(strings == [LocalizableStringsKeys.testValueYes.key: "Sí"])
-    }
-
-    @Test
-    func stringsForKeysFallingBackToKeyDoesNotReplaceStringFoundAtEarlierLocation() async {
-
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.locale(identifier: LocaleId.spanish.id), .locale(identifier: Self.missingLocale)])
-
-        let strings = await localizationServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key], shouldFallbackToKey: true)
+        let strings = await localizationServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key, Self.missingKey], fetchOrder: [.locale(identifier: LocaleId.spanish.id), .english], shouldFallbackToKey: false)
 
         #expect(strings == [LocalizableStringsKeys.testValueYes.key: "Sí"])
     }
@@ -167,43 +73,43 @@ struct AsyncLocalizationServicesTests {
 
         // Expects System to be in Spanish.  Configured in tests.
 
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.system])
-
-        #expect(await localizationServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key]) == [LocalizableStringsKeys.testValueYes.key: "Sí"])
+        #expect(await localizationServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key], fetchOrder: [.system], shouldFallbackToKey: false) == [LocalizableStringsKeys.testValueYes.key: "Sí"])
     }
 
     @Test
-    func stringsForKeysFetchOrderOverridesFetchStringsInOrder() async {
+    func stringsForKeysFallsBackToKeyWhenStringDoesNotExist()async {
 
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.english])
+        let strings = await localizationServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key, Self.missingKey], fetchOrder: [.locale(identifier: LocaleId.spanish.id), .english], shouldFallbackToKey: true)
 
-        #expect(await localizationServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key], fetchOrder: [.locale(identifier: LocaleId.spanish.id)]) == [LocalizableStringsKeys.testValueYes.key: "Sí"])
+        #expect(strings == [LocalizableStringsKeys.testValueYes.key: "Sí", Self.missingKey: Self.missingKey])
+    }
+
+    @Test
+    func stringsForKeysFallingBackToKeyDoesNotReplaceStringFoundAtEarlierLocation()async {
+
+        let strings = await localizationServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key], fetchOrder: [.locale(identifier: LocaleId.spanish.id), .locale(identifier: Self.missingLocale)], shouldFallbackToKey: true)
+
+        #expect(strings == [LocalizableStringsKeys.testValueYes.key: "Sí"])
+    }
+
+    @Test
+    func stringsForKeysReturnsEmptyDictionaryWhenFetchOrderIsEmptyAndFallingBackToKey()async {
+
+        #expect(await localizationServices.stringsForKeys(keys: [LocalizableStringsKeys.testValueYes.key], fetchOrder: [], shouldFallbackToKey: true) == [:])
     }
 
     // MARK: - String By Location
 
     @Test
-    func stringForKeyReturnsNilWhenFetchStringsInOrderIsEmpty() async {
-
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [])
-
-        #expect(await localizationServices.stringForKey(key: LocalizableStringsKeys.testValueYes.key) == nil)
-    }
-
-    @Test
     func stringForKeyReturnsEnglishStringWhenLocationIsEnglish() async {
 
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.english])
-
-        #expect(await localizationServices.stringForKey(key: LocalizableStringsKeys.testValueYes.key) == "yes")
+        #expect(await localizationServices.stringForKey(key: LocalizableStringsKeys.testValueYes.key, fetchOrder: [.english], shouldFallbackToKey: false) == "yes")
     }
 
     @Test
     func stringForKeyReturnsLocaleStringWhenLocationIsLocale() async {
 
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.locale(identifier: LocaleId.spanish.id)])
-
-        #expect(await localizationServices.stringForKey(key: LocalizableStringsKeys.testValueYes.key) == "Sí")
+        #expect(await localizationServices.stringForKey(key: LocalizableStringsKeys.testValueYes.key, fetchOrder: [.locale(identifier: LocaleId.spanish.id)], shouldFallbackToKey: false) == "Sí")
     }
 
     @Test
@@ -211,186 +117,64 @@ struct AsyncLocalizationServicesTests {
 
         // Expects System to be in Spanish.  Configured in tests.
 
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.system])
-
-        #expect(await localizationServices.stringForKey(key: LocalizableStringsKeys.testValueYes.key) == "Sí")
+        #expect(await localizationServices.stringForKey(key: LocalizableStringsKeys.testValueYes.key, fetchOrder: [.system], shouldFallbackToKey: false) == "Sí")
     }
 
     @Test
     func stringForKeyFallsBackToNextLocationWhenLocaleDoesNotExist() async {
 
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.locale(identifier: Self.missingLocale), .english])
-
-        #expect(await localizationServices.stringForKey(key: LocalizableStringsKeys.testValueYes.key) == "yes")
+        #expect(await localizationServices.stringForKey(key: LocalizableStringsKeys.testValueYes.key, fetchOrder: [.locale(identifier: Self.missingLocale), .english], shouldFallbackToKey: false) == "yes")
     }
 
     @Test
     func stringForKeyFallsBackToNextLocationWhenLocaleStringDoesNotExist() async {
 
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.locale(identifier: LocaleId.spanish.id), .english])
-
-        #expect(await localizationServices.stringForKey(key: Self.englishOnlyKey) == "English Only")
+        #expect(await localizationServices.stringForKey(key: Self.englishOnlyKey, fetchOrder: [.locale(identifier: LocaleId.spanish.id), .english], shouldFallbackToKey: false) == "English Only")
     }
 
     @Test
     func stringForKeyReturnsStringFromFirstLocationThatHasIt() async {
 
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.english, .locale(identifier: LocaleId.spanish.id)])
-
-        #expect(await localizationServices.stringForKey(key: LocalizableStringsKeys.testValueYes.key) == "yes")
+        #expect(await localizationServices.stringForKey(key: LocalizableStringsKeys.testValueYes.key, fetchOrder: [.locale(identifier: LocaleId.spanish.id), .english], shouldFallbackToKey: false) == "Sí")
+        #expect(await localizationServices.stringForKey(key: LocalizableStringsKeys.testValueYes.key, fetchOrder: [.english, .locale(identifier: LocaleId.spanish.id)], shouldFallbackToKey: false) == "yes")
     }
 
     @Test
     func stringForKeyReturnsNilWhenKeyDoesNotExistInAnyLocation() async {
 
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.locale(identifier: LocaleId.spanish.id), .system, .english])
-
-        #expect(await localizationServices.stringForKey(key: Self.missingKey) == nil)
+        #expect(await localizationServices.stringForKey(key: Self.missingKey, fetchOrder: [.locale(identifier: LocaleId.spanish.id), .system, .english], shouldFallbackToKey: false) == nil)
     }
 
     @Test
-    func stringForKeyReturnsStringWhenFallingBackToKey() async {
+    func stringForKeyReturnsKeyWhenStringDoesNotExistAndFallingBackToKey()async {
 
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.locale(identifier: LocaleId.spanish.id)])
-
-        #expect(await localizationServices.stringForKey(key: LocalizableStringsKeys.testValueYes.key, shouldFallbackToKey: true) == "Sí")
+        #expect(await localizationServices.stringForKey(key: Self.missingKey, fetchOrder: [.locale(identifier: LocaleId.spanish.id), .english], shouldFallbackToKey: true) == Self.missingKey)
     }
 
     @Test
-    func stringForKeyReturnsKeyWhenStringDoesNotExistAndFallingBackToKey() async {
+    func stringForKeyReturnsStringWhenFoundAndFallingBackToKey()async {
 
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.locale(identifier: LocaleId.spanish.id), .english])
-
-        #expect(await localizationServices.stringForKey(key: Self.missingKey, shouldFallbackToKey: true) == Self.missingKey)
+        #expect(await localizationServices.stringForKey(key: LocalizableStringsKeys.testValueYes.key, fetchOrder: [.locale(identifier: LocaleId.spanish.id)], shouldFallbackToKey: true) == "Sí")
     }
 
     @Test
-    func stringForKeyReturnsNilWhenFetchStringsInOrderIsEmptyAndFallingBackToKey() async {
+    func stringForKeyReturnsNilWhenFetchOrderIsEmptyAndFallingBackToKey()async {
 
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [])
-
-        #expect(await localizationServices.stringForKey(key: LocalizableStringsKeys.testValueYes.key, shouldFallbackToKey: true) == nil)
-    }
-
-    @Test
-    func stringForKeyReturnsKeyWhenConfigFallsBackToKey() async {
-
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.locale(identifier: LocaleId.spanish.id), .english], shouldFallbackToKeyIfNoString: true)
-
-        #expect(await localizationServices.stringForKey(key: Self.missingKey) == Self.missingKey)
-    }
-
-    @Test
-    func stringForKeyReturnsNilWhenConfigDoesNotFallBackToKey() async {
-
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.locale(identifier: LocaleId.spanish.id), .english], shouldFallbackToKeyIfNoString: false)
-
-        #expect(await localizationServices.stringForKey(key: Self.missingKey) == nil)
-    }
-
-    @Test
-    func stringForKeyShouldFallbackToKeyOverridesConfig() async {
-
-        let fallsBackToKeyServices = Self.getLocalizationServices(fetchStringsInOrder: [.locale(identifier: LocaleId.spanish.id), .english], shouldFallbackToKeyIfNoString: true)
-
-        #expect(await fallsBackToKeyServices.stringForKey(key: Self.missingKey, shouldFallbackToKey: false) == nil)
-
-        let doesNotFallBackToKeyServices = Self.getLocalizationServices(fetchStringsInOrder: [.locale(identifier: LocaleId.spanish.id), .english], shouldFallbackToKeyIfNoString: false)
-
-        #expect(await doesNotFallBackToKeyServices.stringForKey(key: Self.missingKey, shouldFallbackToKey: true) == Self.missingKey)
+        #expect(await localizationServices.stringForKey(key: LocalizableStringsKeys.testValueYes.key, fetchOrder: [], shouldFallbackToKey: true) == nil)
     }
 
     // MARK: - String By Location - Fetch Order
 
     @Test
-    func stringForKeyFetchOrderOverridesFetchStringsInOrder() async {
-
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.english])
-
-        #expect(await localizationServices.stringForKey(key: LocalizableStringsKeys.testValueYes.key, fetchOrder: [.locale(identifier: LocaleId.spanish.id)]) == "Sí")
-    }
-
-    @Test
-    func stringForKeyFetchOrderOverridesEmptyFetchStringsInOrder() async {
-
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [])
-
-        #expect(await localizationServices.stringForKey(key: LocalizableStringsKeys.testValueYes.key, fetchOrder: [.locale(identifier: LocaleId.spanish.id)]) == "Sí")
-    }
-
-    @Test
-    func stringForKeyUsesFetchStringsInOrderWhenFetchOrderIsNil() async {
-
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.locale(identifier: LocaleId.spanish.id)])
-
-        #expect(await localizationServices.stringForKey(key: LocalizableStringsKeys.testValueYes.key, fetchOrder: nil) == "Sí")
-    }
-
-    @Test
     func stringForKeyReturnsNilWhenFetchOrderIsEmpty() async {
 
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.english])
-
-        #expect(await localizationServices.stringForKey(key: LocalizableStringsKeys.testValueYes.key, fetchOrder: []) == nil)
-    }
-
-    @Test
-    func stringForKeyFetchOrderReturnsSystemString() async {
-
-        // Expects System to be in Spanish.  Configured in tests.
-
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.english])
-
-        #expect(await localizationServices.stringForKey(key: LocalizableStringsKeys.testValueYes.key, fetchOrder: [.system]) == "Sí")
+        #expect(await localizationServices.stringForKey(key: LocalizableStringsKeys.testValueYes.key, fetchOrder: [], shouldFallbackToKey: false) == nil)
     }
 
     @Test
     func stringForKeyFetchOrderFallsBackToNextLocation() async {
 
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.english])
-
-        #expect(await localizationServices.stringForKey(key: LocalizableStringsKeys.testValueYes.key, fetchOrder: [.locale(identifier: Self.missingLocale), .locale(identifier: LocaleId.spanish.id)]) == "Sí")
-    }
-
-    @Test
-    func stringForKeyFetchOrderReturnsStringFromFirstLocationThatHasIt() async {
-
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [])
-
-        #expect(await localizationServices.stringForKey(key: LocalizableStringsKeys.testValueYes.key, fetchOrder: [.locale(identifier: LocaleId.spanish.id), .english]) == "Sí")
-        #expect(await localizationServices.stringForKey(key: LocalizableStringsKeys.testValueYes.key, fetchOrder: [.english, .locale(identifier: LocaleId.spanish.id)]) == "yes")
-    }
-
-    @Test
-    func stringForKeyFetchOrderReturnsNilWhenKeyDoesNotExistInAnyLocation() async {
-
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.english])
-
-        #expect(await localizationServices.stringForKey(key: Self.missingKey, fetchOrder: [.locale(identifier: LocaleId.spanish.id), .system, .english]) == nil)
-    }
-
-    @Test
-    func stringForKeyFetchOrderOverridesFetchStringsInOrderWhenFallingBackToKey() async {
-
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.english])
-
-        #expect(await localizationServices.stringForKey(key: LocalizableStringsKeys.testValueYes.key, shouldFallbackToKey: true, fetchOrder: [.locale(identifier: LocaleId.spanish.id)]) == "Sí")
-    }
-
-    @Test
-    func stringForKeyReturnsNilWhenFetchOrderIsEmptyAndFallingBackToKey() async {
-
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.english])
-
-        #expect(await localizationServices.stringForKey(key: LocalizableStringsKeys.testValueYes.key, shouldFallbackToKey: true, fetchOrder: []) == nil)
-    }
-
-    @Test
-    func stringForKeyFetchOrderReturnsKeyWhenStringDoesNotExistAndFallingBackToKey() async {
-
-        let localizationServices = Self.getLocalizationServices(fetchStringsInOrder: [.english])
-
-        #expect(await localizationServices.stringForKey(key: Self.missingKey, shouldFallbackToKey: true, fetchOrder: [.locale(identifier: LocaleId.spanish.id), .english]) == Self.missingKey)
+        #expect(await localizationServices.stringForKey(key: LocalizableStringsKeys.testValueYes.key, fetchOrder: [.locale(identifier: Self.missingLocale), .locale(identifier: LocaleId.spanish.id)], shouldFallbackToKey: false) == "Sí")
     }
 
     // MARK: - English
