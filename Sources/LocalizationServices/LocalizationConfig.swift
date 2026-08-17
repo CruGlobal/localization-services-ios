@@ -8,25 +8,16 @@
 import Foundation
 
 public struct LocalizationConfig: Sendable {
-    
-    public static let defaultFetchOrder: [StringLocation] = [.english]
-    public static let defaultShouldFallbackToKey: Bool = false
-    
+
     let localizableStringsFilesBundle: Bundle?
     let isUsingBaseInternationalization: Bool
-    let fetchStringsInOrder: [StringLocation]
-    let shouldFallbackToKeyIfNoString: Bool
-    
+
     public init(
         localizableStringsFilesBundle: Bundle?,
-        isUsingBaseInternationalization: Bool,
-        fetchStringsInOrder: [StringLocation]? = nil,
-        shouldFallbackToKeyIfNoString: Bool? = nil
+        isUsingBaseInternationalization: Bool
     ) {
-        
+
         self.localizableStringsFilesBundle = localizableStringsFilesBundle
         self.isUsingBaseInternationalization = isUsingBaseInternationalization
-        self.fetchStringsInOrder = fetchStringsInOrder ?? Self.defaultFetchOrder
-        self.shouldFallbackToKeyIfNoString = shouldFallbackToKeyIfNoString ?? Self.defaultShouldFallbackToKey
     }
 }
